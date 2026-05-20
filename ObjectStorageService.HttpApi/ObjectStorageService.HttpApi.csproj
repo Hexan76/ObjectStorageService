@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>Service.Template</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+      <Content Remove="C:\Users\ahmadie\.nuget\packages\volo.abp.aspnetcore.mvc\10.3.0\contentFiles\any\net10.0\Volo.Abp.AspNetCore.Mvc.abppkg.analyze.json" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="FastEndpoints.Swagger" />
+        <PackageReference Include="Volo.Abp.AspNetCore.Mvc" />
+        <PackageReference Include="MassTransit" />
+        <PackageReference Include="FastEndpoints" />
+        <PackageReference Include="FastEndpoints.Swagger" />
+        <ProjectReference Include="..\..\building-block\src\Framework.BuildingBlock.HttpApi\Framework.BuildingBlock.HttpApi.csproj" />
+        <ProjectReference Include="..\ObjectStorageService.Application.Contracts\ObjectStorageService.Application.Contracts.csproj" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>Service.Template</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="MediatR" />
+        <PackageReference Include="Volo.Abp.LuckyPenny.AutoMapper" />
+        <PackageReference Include="Volo.Abp.Ddd.Application" />
+        <ProjectReference Include="..\..\building-block\src\Framework.BuildingBlock.Application\Framework.BuildingBlock.Application.csproj" />
+        <ProjectReference Include="..\ObjectStorageService.Application.Contracts\ObjectStorageService.Application.Contracts.csproj" />
+        <ProjectReference Include="..\ObjectStorageService.Domain\ObjectStorageService.Domain.csproj" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>Service.Template</RootNamespace>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ObjectStorageService.Domain.Shared\ObjectStorageService.Domain.Shared.csproj" />
+	  <ProjectReference Include="..\..\building-block\src\Framework.BuildingBlock.Domain\Framework.BuildingBlock.Domain.csproj" />
+    </ItemGroup>
+</Project>

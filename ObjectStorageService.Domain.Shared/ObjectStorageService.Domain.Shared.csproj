@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<RootNamespace>Service.Template</RootNamespace>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Volo.Abp.Caching.StackExchangeRedis" />
+		<PackageReference Include="Volo.Abp.Ddd.Domain.Shared" />
+		<PackageReference Include="Volo.Abp.Validation" />
+		<PackageReference Include="MiniExcel" />
+
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Include="Localization\Resources\en-US.json" />
+	  <EmbeddedResource Include="Localization\Resources\fa-IR.json" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\building-block\src\Framework.BuildingBlock.Domain.Shared\Framework.BuildingBlock.Domain.Shared.csproj" />
+	</ItemGroup>
+
+</Project>

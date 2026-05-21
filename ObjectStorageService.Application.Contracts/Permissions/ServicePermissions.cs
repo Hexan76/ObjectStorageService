@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.Reflection;
 
-namespace Service.Template.Permissions;
+namespace ObjectStorageService.Permissions;
 
 public class ObjectStorageServicePermissions
 {

@@ -1,4 +1,4 @@
-﻿namespace Service.Template.Domain.Shared;
+﻿namespace ObjectStorageService.Domain.Shared;
 
 public static class ObjectStorageServiceErrorCodes
 {

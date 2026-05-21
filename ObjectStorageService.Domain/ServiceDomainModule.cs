@@ -1,8 +1,8 @@
 ﻿using Framework.BuildingBlock.Domain;
-using Service.Template.Domain.Shared;
+using ObjectStorageService.Domain.Shared;
 using Volo.Abp.Modularity;
 
-namespace Service.Template.Domain;
+namespace ObjectStorageService.Domain;
 
 [DependsOn(
     typeof(BuildingBlockDomainModule),

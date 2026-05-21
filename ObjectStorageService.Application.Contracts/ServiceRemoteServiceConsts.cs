@@ -1,4 +1,4 @@
-﻿namespace Service.Template.Application.Contracts;
+﻿namespace ObjectStorageService.Application.Contracts;
 
 public class ObjectStorageServiceRemoteServiceConsts
 {

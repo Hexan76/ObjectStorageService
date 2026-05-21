@@ -1,8 +1,8 @@
 ﻿using Framework.BuildingBlock.Application.Contracts;
-using Service.Template.Domain.Shared;
+using ObjectStorageService.Domain.Shared;
 using Volo.Abp.Modularity;
 
-namespace Service.Template.Application.Contracts;
+namespace ObjectStorageService.Application.Contracts;
 
 [DependsOn(
     typeof(ObjectStorageServiceDomainSharedModule),

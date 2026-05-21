@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Volo.Abp;
 
-namespace Service.Template.EntityFrameworkCore;
+namespace ObjectStorageService.EntityFrameworkCore;
 
 public static class ObjectStorageServiceDbContextModelCreatingExtensions
 {

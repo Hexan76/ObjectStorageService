@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Service.Template.Migrations
+namespace ObjectStorageService.Migrations
 {
     /// <inheritdoc />
     public partial class init : Migration

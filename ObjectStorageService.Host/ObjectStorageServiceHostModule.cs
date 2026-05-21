@@ -8,12 +8,13 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.RequestLocalization;
-using Service.Template.Application;
-using Service.Template.Application.Contracts;
-using Service.Template.Domain;
-using Service.Template.Domain.Shared;
-using Service.Template.EntityFrameworkCore;
-using Service.Template.HttpApi;
+using ObjectStorageService.Application;
+using ObjectStorageService.Application.Contracts;
+using ObjectStorageService.Domain;
+using ObjectStorageService.Domain.Shared;
+using ObjectStorageService.EntityFrameworkCore;
+using ObjectStorageService.HttpApi;
+using System.Text.Json.Serialization;
 using Template.Service.Domain.Shared;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.ExceptionHandling;
@@ -119,6 +120,12 @@ public class ObjectStorageServiceHostModule : AbpModule
             );
         });
 
+        context.Services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.Converters.Add(
+                new JsonStringEnumConverter());
+        });
+
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
@@ -198,8 +205,7 @@ public class ObjectStorageServiceHostModule : AbpModule
         context.Services.AddFastEndpoints(c =>
         {
             c.IncludeAbstractValidators = true;
-        })
-            .FrameworkNSwagDocsPerModule(SwaggerDefinitions.GetSwaggerModules());
+        }).FrameworkNSwagDocsPerModule(SwaggerDefinitions.GetSwaggerModules());
 
         //context.Services.Replace(ServiceDescriptor.Singleton<IAuthorizationPolicyProvider, BearerAwarePolicyProvider>());
 
@@ -437,8 +443,11 @@ public class ObjectStorageServiceHostModule : AbpModule
         //        options.WebSockets.CloseTimeout = TimeSpan.FromSeconds(30);
         //    });
         //});
+
         app.UseFastEndpoints(cfg =>
         {
+            cfg.Versioning.Prefix = "v";
+            cfg.Versioning.PrependToRoute = true;
             cfg.Errors.ResponseBuilder = (failures, ctx, statusCode) =>
             {
                 var validationFailureHandler =
@@ -447,7 +456,6 @@ public class ObjectStorageServiceHostModule : AbpModule
                     .BuildValidationResponseAsync(failures, ctx, statusCode);
             };
 
-        })
-            .UseSwaggerGen();
+        }).UseSwaggerGen();
     }
 }

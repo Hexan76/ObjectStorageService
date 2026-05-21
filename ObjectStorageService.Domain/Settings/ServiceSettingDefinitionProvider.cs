@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.Settings;
 
-namespace Service.Template.Settings;
+namespace ObjectStorageService.Settings;
 
 public class ObjectStorageServiceSettingDefinitionProvider : SettingDefinitionProvider
 {

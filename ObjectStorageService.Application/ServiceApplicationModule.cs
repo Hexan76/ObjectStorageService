@@ -1,11 +1,12 @@
 using Framework.BuildingBlock.Application;
 using Microsoft.Extensions.DependencyInjection;
-using Service.Template.Application.Contracts;
-using Service.Template.Domain;
+using Minio;
+using ObjectStorageService.Application.Contracts;
+using ObjectStorageService.Domain;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
 
-namespace Service.Template.Application;
+namespace ObjectStorageService.Application;
 
 [DependsOn(
     typeof(AbpLuckyPennyAutoMapperModule),
@@ -28,6 +29,6 @@ public class ObjectStorageServiceApplicationModule : AbpModule
         {
             options.RegisterServicesFromAssembly(typeof(ObjectStorageServiceApplicationModule).Assembly);
         });
-
+        context.Services.AddSingleton<IMinioClientFactory, MinioClientFactory>();
     }
 }

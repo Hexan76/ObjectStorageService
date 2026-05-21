@@ -1,7 +1,7 @@
 ﻿using Template.Service.Domain.Shared;
 using Volo.Abp.AspNetCore.Mvc;
 
-namespace Service.Template.HttpApi;
+namespace ObjectStorageService.HttpApi;
 
 public abstract class ObjectStorageServiceController : AbpControllerBase
 {

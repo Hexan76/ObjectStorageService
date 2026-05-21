@@ -1,6 +1,6 @@
-﻿namespace Service.Template.Constants;
+﻿namespace ObjectStorageService.Constants;
 
 public class ObjectStorageServiceApiTags
 {
-    public const string Locations = "locations";
+    public const string ObjectStorage = "object-storage";
 }

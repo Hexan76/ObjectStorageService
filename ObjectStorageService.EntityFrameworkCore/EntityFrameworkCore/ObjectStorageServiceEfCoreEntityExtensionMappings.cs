@@ -1,7 +1,7 @@
-﻿using Service.Template.Domain;
+﻿using ObjectStorageService.Domain;
 using Volo.Abp.Threading;
 
-namespace Service.Template.EntityFrameworkCore;
+namespace ObjectStorageService.EntityFrameworkCore;
 
 public static class ObjectStorageServiceEfCoreEntityExtensionMappings
 {

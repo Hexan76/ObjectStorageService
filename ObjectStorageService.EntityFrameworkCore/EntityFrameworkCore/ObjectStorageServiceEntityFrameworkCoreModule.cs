@@ -1,11 +1,11 @@
 using Framework.BuildingBlock.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Service.Template.Domain;
+using ObjectStorageService.Domain;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.PostgreSql;
 using Volo.Abp.Modularity;
 
-namespace Service.Template.EntityFrameworkCore;
+namespace ObjectStorageService.EntityFrameworkCore;
 
 [DependsOn(
     typeof(ObjectStorageServiceDomainModule),

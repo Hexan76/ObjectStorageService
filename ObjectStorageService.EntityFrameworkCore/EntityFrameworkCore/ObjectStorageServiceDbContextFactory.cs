@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace Service.Template.EntityFrameworkCore;
+namespace ObjectStorageService.EntityFrameworkCore;
 
 public class ObjectStorageServiceDbContextFactory : IDesignTimeDbContextFactory<ObjectStorageServiceDbContext>
 {

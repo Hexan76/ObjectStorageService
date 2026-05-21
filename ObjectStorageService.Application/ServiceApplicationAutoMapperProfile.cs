@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace Service.Template.Application;
+namespace ObjectStorageService.Application;
 
 public class ObjectStorageServiceApplicationAutoMapperProfile : Profile
 {

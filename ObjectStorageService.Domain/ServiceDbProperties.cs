@@ -1,4 +1,4 @@
-﻿namespace Service.Template.Domain;
+﻿namespace ObjectStorageService.Domain;
 
 public static class ObjectStorageServiceDbProperties
 {

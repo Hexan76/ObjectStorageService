@@ -2,7 +2,7 @@
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Localization;
 
-namespace Service.Template.Permissions;
+namespace ObjectStorageService.Permissions;
 
 public class ObjectStorageServicePermissionDefinitionProvider : PermissionDefinitionProvider
 {

@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Service.Template.EntityFrameworkCore;
+using ObjectStorageService.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
 #nullable disable
 
-namespace Service.Template.Migrations
+namespace ObjectStorageService.Migrations
 {
     [DbContext(typeof(ObjectStorageServiceDbContext))]
     [Migration("20260426132202_init")]
@@ -30,7 +30,7 @@ namespace Service.Template.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Service.Template.Locations.Location", b =>
+            modelBuilder.Entity("ObjectStorageService.Locations.Location", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -82,9 +82,9 @@ namespace Service.Template.Migrations
                     b.ToTable("Location", (string)null);
                 });
 
-            modelBuilder.Entity("Service.Template.Locations.Location", b =>
+            modelBuilder.Entity("ObjectStorageService.Locations.Location", b =>
                 {
-                    b.HasOne("Service.Template.Locations.Location", "Parent")
+                    b.HasOne("ObjectStorageService.Locations.Location", "Parent")
                         .WithMany("Children")
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -92,7 +92,7 @@ namespace Service.Template.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("Service.Template.Locations.Location", b =>
+            modelBuilder.Entity("ObjectStorageService.Locations.Location", b =>
                 {
                     b.Navigation("Children");
                 });

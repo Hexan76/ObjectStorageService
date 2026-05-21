@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.Threading;
 
-namespace Service.Template.Domain;
+namespace ObjectStorageService.Domain;
 
 public static class ObjectStorageServiceModuleExtensionConfigurator
 {

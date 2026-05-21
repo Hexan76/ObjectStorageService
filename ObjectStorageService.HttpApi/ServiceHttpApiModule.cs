@@ -1,9 +1,9 @@
 using Framework.BuildingBlock.HttpApi;
 using Microsoft.Extensions.DependencyInjection;
-using Service.Template.Application.Contracts;
+using ObjectStorageService.Application.Contracts;
 using Volo.Abp.Modularity;
 
-namespace Service.Template.HttpApi;
+namespace ObjectStorageService.HttpApi;
 
 [DependsOn(
     typeof(ObjectStorageServiceApplicationContractsModule),

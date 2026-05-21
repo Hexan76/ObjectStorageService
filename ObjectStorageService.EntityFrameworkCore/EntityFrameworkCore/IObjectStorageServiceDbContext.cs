@@ -1,8 +1,8 @@
-using Service.Template.Domain;
+using ObjectStorageService.Domain;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace Service.Template.EntityFrameworkCore;
+namespace ObjectStorageService.EntityFrameworkCore;
 
 [ConnectionStringName(ObjectStorageServiceDbProperties.ConnectionStringName)]
 public interface IObjectStorageServiceDbContext : IEfCoreDbContext

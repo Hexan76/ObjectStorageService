@@ -1,4 +1,4 @@
-﻿namespace Service.Template.Settings;
+﻿namespace ObjectStorageService.Settings;
 
 public static class ObjectStorageServiceSettings
 {

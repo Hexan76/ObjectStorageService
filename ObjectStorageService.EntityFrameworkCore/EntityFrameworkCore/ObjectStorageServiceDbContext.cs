@@ -1,11 +1,11 @@
-using Service.Template.Domain;
+using ObjectStorageService.Domain;
 using Microsoft.EntityFrameworkCore;
 
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 using System.Reflection;
 
-namespace Service.Template.EntityFrameworkCore;
+namespace ObjectStorageService.EntityFrameworkCore;
 
 [ConnectionStringName(ObjectStorageServiceDbProperties.ConnectionStringName)]
 public class ObjectStorageServiceDbContext : AbpDbContext<ObjectStorageServiceDbContext>, IObjectStorageServiceDbContext

@@ -67,11 +67,14 @@ public class UploadTempFilesHandler(
             result.Files.Add(new TempFileModel
             {
                 Id = id,
-                FileName = file.FileName,
+                Name = file.FileName,
 
                 ObjectKey = response?.ObjectName,
 
-                Url =
+                MimeType = file.ContentType,
+                Size = (int)file.Length,
+
+                Link =
                     $"{_baseUrl.TrimEnd('/')}/" +
                     $"{_destinationBucket}/" +
                     $"{response.ObjectName}",
@@ -79,9 +82,10 @@ public class UploadTempFilesHandler(
         }
 
 
-        return new AcceptMessage<UploadTempFilesResponse>
+        return new ResultApi<UploadTempFilesResponse>
         {
-            Data = result
+            Result = result,
+            Success = true
         };
     }
 }

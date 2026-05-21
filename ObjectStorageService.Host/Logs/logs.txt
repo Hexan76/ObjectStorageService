@@ -8755,3 +8755,193 @@ SixLabors.ImageSharp.InvalidImageContentException: Missing SOI marker.
 2026-05-21 15:35:12.015 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
 2026-05-21 15:35:12.610 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
 2026-05-21 15:35:12.610 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - 200 null application/json; charset=utf-8 595.8808ms
+2026-05-21 15:39:57.251 +03:30 [INF] Starting Gateway.Host.
+2026-05-21 15:39:58.592 +03:30 [DBG] Loaded ABP modules:
+2026-05-21 15:39:58.593 +03:30 [DBG] - ObjectStorageService.Host.ObjectStorageServiceHostModule
+2026-05-21 15:39:58.593 +03:30 [DBG]   - Volo.Abp.Autofac.AbpAutofacModule
+2026-05-21 15:39:58.593 +03:30 [DBG]     - Volo.Abp.Castle.AbpCastleCoreModule
+2026-05-21 15:39:58.593 +03:30 [DBG]   - Volo.Abp.AspNetCore.MultiTenancy.AbpAspNetCoreMultiTenancyModule
+2026-05-21 15:39:58.593 +03:30 [DBG]     - Volo.Abp.MultiTenancy.AbpMultiTenancyModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.Data.AbpDataModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.ObjectExtending.AbpObjectExtendingModule
+2026-05-21 15:39:58.593 +03:30 [DBG]           - Volo.Abp.Localization.AbpLocalizationAbstractionsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]           - Volo.Abp.Validation.AbpValidationAbstractionsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.Uow.AbpUnitOfWorkModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.EventBus.Abstractions.AbpEventBusAbstractionsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.Security.AbpSecurityModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.Settings.AbpSettingsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.MultiTenancy.AbpMultiTenancyAbstractionsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.VirtualFileSystem.AbpVirtualFileSystemModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.Localization.AbpLocalizationModule
+2026-05-21 15:39:58.593 +03:30 [DBG]           - Volo.Abp.Threading.AbpThreadingModule
+2026-05-21 15:39:58.593 +03:30 [DBG]     - Volo.Abp.AspNetCore.AbpAspNetCoreModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.Auditing.AbpAuditingModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.Json.AbpJsonModule
+2026-05-21 15:39:58.593 +03:30 [DBG]           - Volo.Abp.Json.SystemTextJson.AbpJsonSystemTextJsonModule
+2026-05-21 15:39:58.593 +03:30 [DBG]             - Volo.Abp.Json.AbpJsonAbstractionsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]             - Volo.Abp.Timing.AbpTimingModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.Auditing.AbpAuditingContractsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.Http.AbpHttpModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.Http.AbpHttpAbstractionsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.Minify.AbpMinifyModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.Authorization.AbpAuthorizationModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.Authorization.AbpAuthorizationAbstractionsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.Validation.AbpValidationModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.ExceptionHandling.AbpExceptionHandlingModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.AspNetCore.AbpAspNetCoreAbstractionsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]   - ObjectStorageService.Application.Contracts.ObjectStorageServiceApplicationContractsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]     - ObjectStorageService.Domain.Shared.ObjectStorageServiceDomainSharedModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Framework.BuildingBlock.Domain.Shared.BuildingBlockDomainSharedModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Framework.Localization.LocalizationModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.Domain.AbpDddDomainSharedModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.Caching.StackExchangeRedis.AbpCachingStackExchangeRedisModule
+2026-05-21 15:39:58.593 +03:30 [DBG]           - Volo.Abp.Caching.AbpCachingModule
+2026-05-21 15:39:58.593 +03:30 [DBG]             - Volo.Abp.Serialization.AbpSerializationModule
+2026-05-21 15:39:58.593 +03:30 [DBG]     - Framework.BuildingBlock.Application.Contracts.BuildingBlockApplicationContractsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.Application.AbpDddApplicationContractsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]   - ObjectStorageService.Application.ObjectStorageServiceApplicationModule
+2026-05-21 15:39:58.593 +03:30 [DBG]     - Volo.Abp.AutoMapper.AbpLuckyPennyAutoMapperModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.ObjectMapping.AbpObjectMappingModule
+2026-05-21 15:39:58.593 +03:30 [DBG]     - Framework.BuildingBlock.Application.BuildingBlockApplicationModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Framework.BuildingBlock.Domain.BuildingBlockDomainModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.Domain.AbpDddDomainModule
+2026-05-21 15:39:58.593 +03:30 [DBG]           - Volo.Abp.EventBus.AbpEventBusModule
+2026-05-21 15:39:58.593 +03:30 [DBG]             - Volo.Abp.Guids.AbpGuidsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]             - Volo.Abp.BackgroundWorkers.AbpBackgroundWorkersModule
+2026-05-21 15:39:58.593 +03:30 [DBG]             - Volo.Abp.DistributedLocking.AbpDistributedLockingAbstractionsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]           - Volo.Abp.Specifications.AbpSpecificationsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.Application.AbpDddApplicationModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.Features.AbpFeaturesModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.GlobalFeatures.AbpGlobalFeaturesModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Framework.Security.FrameworkSecurityModule
+2026-05-21 15:39:58.593 +03:30 [DBG]     - ObjectStorageService.Domain.ObjectStorageServiceDomainModule
+2026-05-21 15:39:58.593 +03:30 [DBG]   - ObjectStorageService.EntityFrameworkCore.ObjectStorageServiceEntityFrameworkCoreModule
+2026-05-21 15:39:58.593 +03:30 [DBG]     - Framework.BuildingBlock.EntityFrameworkCore.BuildingBlockEntityFrameworkCoreModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.EntityFrameworkCore.AbpEntityFrameworkCoreModule
+2026-05-21 15:39:58.593 +03:30 [DBG]     - Volo.Abp.EntityFrameworkCore.PostgreSql.AbpEntityFrameworkCorePostgreSqlModule
+2026-05-21 15:39:58.593 +03:30 [DBG]   - ObjectStorageService.HttpApi.ObjectStorageServiceHttpApiModule
+2026-05-21 15:39:58.593 +03:30 [DBG]     - Framework.BuildingBlock.HttpApi.BuildingBlockHttpApiModule
+2026-05-21 15:39:58.593 +03:30 [DBG]       - Volo.Abp.AspNetCore.Mvc.AbpAspNetCoreMvcModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.ApiVersioning.AbpApiVersioningAbstractionsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.AspNetCore.Mvc.AbpAspNetCoreMvcContractsModule
+2026-05-21 15:39:58.593 +03:30 [DBG]         - Volo.Abp.UI.Navigation.AbpUiNavigationModule
+2026-05-21 15:39:58.593 +03:30 [DBG]           - Volo.Abp.UI.AbpUiModule
+2026-05-21 15:39:58.593 +03:30 [DBG]   - Volo.Abp.AspNetCore.Serilog.AbpAspNetCoreSerilogModule
+2026-05-21 15:39:58.759 +03:30 [INF] User profile is available. Using 'C:\Users\BSLATech\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-21 15:39:58.813 +03:30 [WRN] You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2026-05-21 15:39:58.822 +03:30 [INF] Registered 2 endpoints in 780 milliseconds.
+2026-05-21 15:39:58.904 +03:30 [INF] No validators found in the system!
+2026-05-21 15:39:58.908 +03:30 [INF] Initialized all ABP modules.
+2026-05-21 15:39:59.066 +03:30 [INF] Now listening on: https://localhost:7298
+2026-05-21 15:39:59.066 +03:30 [INF] Now listening on: http://localhost:5145
+2026-05-21 15:39:59.067 +03:30 [INF] Now listening on: https://192.168.2.29:5145
+2026-05-21 15:39:59.105 +03:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-21 15:39:59.105 +03:30 [INF] Hosting environment: Development
+2026-05-21 15:39:59.105 +03:30 [INF] Content root path: D:\Projects\BSLA\NewStruct\ObjectStorageService\ObjectStorageService.Host
+2026-05-21 15:40:06.618 +03:30 [INF] Request starting HTTP/2 GET https://localhost:7298/swagger/index.html - null null
+2026-05-21 15:40:06.844 +03:30 [INF] Request starting HTTP/2 GET https://localhost:7298/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-21 15:40:06.845 +03:30 [INF] Request starting HTTP/2 GET https://localhost:7298/_vs/browserLink - null null
+2026-05-21 15:40:06.846 +03:30 [INF] Request finished HTTP/2 GET https://localhost:7298/swagger/index.html - 200 null text/html; charset=utf-8 230.6192ms
+2026-05-21 15:40:06.850 +03:30 [INF] Request finished HTTP/2 GET https://localhost:7298/_framework/aspnetcore-browser-refresh.js - 200 14955 application/javascript; charset=utf-8 6.2958ms
+2026-05-21 15:40:06.857 +03:30 [INF] Request starting HTTP/2 GET https://localhost:7298/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-21 15:40:06.858 +03:30 [INF] Request finished HTTP/2 GET https://localhost:7298/_framework/aspnetcore-browser-refresh.js - 200 14955 application/javascript; charset=utf-8 0.3455ms
+2026-05-21 15:40:06.870 +03:30 [INF] Request finished HTTP/2 GET https://localhost:7298/_vs/browserLink - 200 null text/javascript; charset=UTF-8 24.56ms
+2026-05-21 15:40:06.871 +03:30 [INF] Request starting HTTP/2 GET https://localhost:7298/_vs/browserLink - null null
+2026-05-21 15:40:06.881 +03:30 [INF] Request finished HTTP/2 GET https://localhost:7298/_vs/browserLink - 200 null text/javascript; charset=UTF-8 9.9633ms
+2026-05-21 15:40:06.921 +03:30 [INF] Request starting HTTP/2 GET https://localhost:7298/swagger/ObjectStorageService Api/swagger.json - null null
+2026-05-21 15:40:07.258 +03:30 [INF] Request finished HTTP/2 GET https://localhost:7298/swagger/ObjectStorageService Api/swagger.json - 200 null application/json; charset=utf-8 337.3698ms
+2026-05-21 15:41:21.858 +03:30 [INF] Request starting HTTP/2 GET https://localhost:7298/.well-known/appspecific/com.chrome.devtools.json - null null
+2026-05-21 15:41:21.862 +03:30 [INF] Request finished HTTP/2 GET https://localhost:7298/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 3.6069ms
+2026-05-21 15:41:21.864 +03:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7298/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2026-05-21 15:41:22.065 +03:30 [INF] Request starting HTTP/2 GET https://localhost:7298/swagger/swagger-ui.css.map - null null
+2026-05-21 15:41:22.066 +03:30 [INF] Request finished HTTP/2 GET https://localhost:7298/swagger/swagger-ui.css.map - 404 0 null 1.1997ms
+2026-05-21 15:41:22.066 +03:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7298/swagger/swagger-ui.css.map, Response status code: 404
+2026-05-21 15:41:23.315 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - multipart/form-data; boundary=----WebKitFormBoundaryixIxxpAif9xm0dWu 170
+2026-05-21 15:41:23.318 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:41:23.318 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:41:23.320 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:41:23.472 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:41:23.472 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - 400 null application/problem+json; charset=utf-8 157.3709ms
+2026-05-21 15:44:58.353 +03:30 [INF] Starting Gateway.Host.
+2026-05-21 15:45:00.080 +03:30 [DBG] Loaded ABP modules:
+2026-05-21 15:45:00.081 +03:30 [DBG] - ObjectStorageService.Host.ObjectStorageServiceHostModule
+2026-05-21 15:45:00.081 +03:30 [DBG]   - Volo.Abp.Autofac.AbpAutofacModule
+2026-05-21 15:45:00.081 +03:30 [DBG]     - Volo.Abp.Castle.AbpCastleCoreModule
+2026-05-21 15:45:00.081 +03:30 [DBG]   - Volo.Abp.AspNetCore.MultiTenancy.AbpAspNetCoreMultiTenancyModule
+2026-05-21 15:45:00.081 +03:30 [DBG]     - Volo.Abp.MultiTenancy.AbpMultiTenancyModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.Data.AbpDataModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.ObjectExtending.AbpObjectExtendingModule
+2026-05-21 15:45:00.081 +03:30 [DBG]           - Volo.Abp.Localization.AbpLocalizationAbstractionsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]           - Volo.Abp.Validation.AbpValidationAbstractionsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.Uow.AbpUnitOfWorkModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.EventBus.Abstractions.AbpEventBusAbstractionsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.Security.AbpSecurityModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.Settings.AbpSettingsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.MultiTenancy.AbpMultiTenancyAbstractionsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.VirtualFileSystem.AbpVirtualFileSystemModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.Localization.AbpLocalizationModule
+2026-05-21 15:45:00.081 +03:30 [DBG]           - Volo.Abp.Threading.AbpThreadingModule
+2026-05-21 15:45:00.081 +03:30 [DBG]     - Volo.Abp.AspNetCore.AbpAspNetCoreModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.Auditing.AbpAuditingModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.Json.AbpJsonModule
+2026-05-21 15:45:00.081 +03:30 [DBG]           - Volo.Abp.Json.SystemTextJson.AbpJsonSystemTextJsonModule
+2026-05-21 15:45:00.081 +03:30 [DBG]             - Volo.Abp.Json.AbpJsonAbstractionsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]             - Volo.Abp.Timing.AbpTimingModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.Auditing.AbpAuditingContractsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.Http.AbpHttpModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.Http.AbpHttpAbstractionsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.Minify.AbpMinifyModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.Authorization.AbpAuthorizationModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.Authorization.AbpAuthorizationAbstractionsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.Validation.AbpValidationModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.ExceptionHandling.AbpExceptionHandlingModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.AspNetCore.AbpAspNetCoreAbstractionsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]   - ObjectStorageService.Application.Contracts.ObjectStorageServiceApplicationContractsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]     - ObjectStorageService.Domain.Shared.ObjectStorageServiceDomainSharedModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Framework.BuildingBlock.Domain.Shared.BuildingBlockDomainSharedModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Framework.Localization.LocalizationModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.Domain.AbpDddDomainSharedModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.Caching.StackExchangeRedis.AbpCachingStackExchangeRedisModule
+2026-05-21 15:45:00.081 +03:30 [DBG]           - Volo.Abp.Caching.AbpCachingModule
+2026-05-21 15:45:00.081 +03:30 [DBG]             - Volo.Abp.Serialization.AbpSerializationModule
+2026-05-21 15:45:00.081 +03:30 [DBG]     - Framework.BuildingBlock.Application.Contracts.BuildingBlockApplicationContractsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.Application.AbpDddApplicationContractsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]   - ObjectStorageService.Application.ObjectStorageServiceApplicationModule
+2026-05-21 15:45:00.081 +03:30 [DBG]     - Volo.Abp.AutoMapper.AbpLuckyPennyAutoMapperModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.ObjectMapping.AbpObjectMappingModule
+2026-05-21 15:45:00.081 +03:30 [DBG]     - Framework.BuildingBlock.Application.BuildingBlockApplicationModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Framework.BuildingBlock.Domain.BuildingBlockDomainModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.Domain.AbpDddDomainModule
+2026-05-21 15:45:00.081 +03:30 [DBG]           - Volo.Abp.EventBus.AbpEventBusModule
+2026-05-21 15:45:00.081 +03:30 [DBG]             - Volo.Abp.Guids.AbpGuidsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]             - Volo.Abp.BackgroundWorkers.AbpBackgroundWorkersModule
+2026-05-21 15:45:00.081 +03:30 [DBG]             - Volo.Abp.DistributedLocking.AbpDistributedLockingAbstractionsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]           - Volo.Abp.Specifications.AbpSpecificationsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.Application.AbpDddApplicationModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.Features.AbpFeaturesModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.GlobalFeatures.AbpGlobalFeaturesModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Framework.Security.FrameworkSecurityModule
+2026-05-21 15:45:00.081 +03:30 [DBG]     - ObjectStorageService.Domain.ObjectStorageServiceDomainModule
+2026-05-21 15:45:00.081 +03:30 [DBG]   - ObjectStorageService.EntityFrameworkCore.ObjectStorageServiceEntityFrameworkCoreModule
+2026-05-21 15:45:00.081 +03:30 [DBG]     - Framework.BuildingBlock.EntityFrameworkCore.BuildingBlockEntityFrameworkCoreModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.EntityFrameworkCore.AbpEntityFrameworkCoreModule
+2026-05-21 15:45:00.081 +03:30 [DBG]     - Volo.Abp.EntityFrameworkCore.PostgreSql.AbpEntityFrameworkCorePostgreSqlModule
+2026-05-21 15:45:00.081 +03:30 [DBG]   - ObjectStorageService.HttpApi.ObjectStorageServiceHttpApiModule
+2026-05-21 15:45:00.081 +03:30 [DBG]     - Framework.BuildingBlock.HttpApi.BuildingBlockHttpApiModule
+2026-05-21 15:45:00.081 +03:30 [DBG]       - Volo.Abp.AspNetCore.Mvc.AbpAspNetCoreMvcModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.ApiVersioning.AbpApiVersioningAbstractionsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.AspNetCore.Mvc.AbpAspNetCoreMvcContractsModule
+2026-05-21 15:45:00.081 +03:30 [DBG]         - Volo.Abp.UI.Navigation.AbpUiNavigationModule
+2026-05-21 15:45:00.081 +03:30 [DBG]           - Volo.Abp.UI.AbpUiModule
+2026-05-21 15:45:00.081 +03:30 [DBG]   - Volo.Abp.AspNetCore.Serilog.AbpAspNetCoreSerilogModule
+2026-05-21 15:45:00.264 +03:30 [INF] User profile is available. Using 'C:\Users\BSLATech\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-21 15:45:00.322 +03:30 [WRN] You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2026-05-21 15:45:00.331 +03:30 [INF] Registered 2 endpoints in 926 milliseconds.
+2026-05-21 15:45:00.429 +03:30 [INF] No validators found in the system!
+2026-05-21 15:45:00.432 +03:30 [INF] Initialized all ABP modules.
+2026-05-21 15:45:00.600 +03:30 [INF] Now listening on: https://localhost:7298
+2026-05-21 15:45:00.601 +03:30 [INF] Now listening on: http://localhost:5145
+2026-05-21 15:45:00.601 +03:30 [INF] Now listening on: https://192.168.2.29:5145
+2026-05-21 15:45:00.637 +03:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-21 15:45:00.637 +03:30 [INF] Hosting environment: Development
+2026-05-21 15:45:00.637 +03:30 [INF] Content root path: D:\Projects\BSLA\NewStruct\ObjectStorageService\ObjectStorageService.Host

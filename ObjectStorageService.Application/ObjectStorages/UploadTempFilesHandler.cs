@@ -45,7 +45,8 @@ public class UploadTempFilesHandler(
             {
                 var tags = new Dictionary<string, string>()
                 {
-                    {"filename",file.FileName}
+                    {"filename",file.FileName},
+                    {"storageEntityType",request.StorageEntityType.ToString()}
                 };
                 response = await _client.PutObjectAsync(
                     new PutObjectArgs()
@@ -63,8 +64,6 @@ public class UploadTempFilesHandler(
                 Console.WriteLine(ex.Message);
             }
 
-            var expiresAt = DateTime.UtcNow.Add(_expirationTime);
-
             result.Files.Add(new TempFileModel
             {
                 Id = id,
@@ -76,9 +75,6 @@ public class UploadTempFilesHandler(
                     $"{_baseUrl.TrimEnd('/')}/" +
                     $"{_destinationBucket}/" +
                     $"{response.ObjectName}",
-
-                ExpiresAt = expiresAt,
-                RemainingTime = expiresAt - DateTime.UtcNow
             });
         }
 

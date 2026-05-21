@@ -8293,3 +8293,465 @@ System.NullReferenceException: Object reference not set to an instance of an obj
 2026-05-21 13:57:30.358 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
 2026-05-21 13:57:30.751 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
 2026-05-21 13:57:30.751 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - 200 null application/json; charset=utf-8 417.5556ms
+2026-05-21 15:25:17.446 +03:30 [INF] Starting Gateway.Host.
+2026-05-21 15:25:19.093 +03:30 [DBG] Loaded ABP modules:
+2026-05-21 15:25:19.093 +03:30 [DBG] - ObjectStorageService.Host.ObjectStorageServiceHostModule
+2026-05-21 15:25:19.093 +03:30 [DBG]   - Volo.Abp.Autofac.AbpAutofacModule
+2026-05-21 15:25:19.093 +03:30 [DBG]     - Volo.Abp.Castle.AbpCastleCoreModule
+2026-05-21 15:25:19.093 +03:30 [DBG]   - Volo.Abp.AspNetCore.MultiTenancy.AbpAspNetCoreMultiTenancyModule
+2026-05-21 15:25:19.093 +03:30 [DBG]     - Volo.Abp.MultiTenancy.AbpMultiTenancyModule
+2026-05-21 15:25:19.093 +03:30 [DBG]       - Volo.Abp.Data.AbpDataModule
+2026-05-21 15:25:19.093 +03:30 [DBG]         - Volo.Abp.ObjectExtending.AbpObjectExtendingModule
+2026-05-21 15:25:19.093 +03:30 [DBG]           - Volo.Abp.Localization.AbpLocalizationAbstractionsModule
+2026-05-21 15:25:19.093 +03:30 [DBG]           - Volo.Abp.Validation.AbpValidationAbstractionsModule
+2026-05-21 15:25:19.093 +03:30 [DBG]         - Volo.Abp.Uow.AbpUnitOfWorkModule
+2026-05-21 15:25:19.093 +03:30 [DBG]         - Volo.Abp.EventBus.Abstractions.AbpEventBusAbstractionsModule
+2026-05-21 15:25:19.093 +03:30 [DBG]       - Volo.Abp.Security.AbpSecurityModule
+2026-05-21 15:25:19.093 +03:30 [DBG]       - Volo.Abp.Settings.AbpSettingsModule
+2026-05-21 15:25:19.093 +03:30 [DBG]       - Volo.Abp.MultiTenancy.AbpMultiTenancyAbstractionsModule
+2026-05-21 15:25:19.093 +03:30 [DBG]         - Volo.Abp.VirtualFileSystem.AbpVirtualFileSystemModule
+2026-05-21 15:25:19.093 +03:30 [DBG]         - Volo.Abp.Localization.AbpLocalizationModule
+2026-05-21 15:25:19.093 +03:30 [DBG]           - Volo.Abp.Threading.AbpThreadingModule
+2026-05-21 15:25:19.093 +03:30 [DBG]     - Volo.Abp.AspNetCore.AbpAspNetCoreModule
+2026-05-21 15:25:19.093 +03:30 [DBG]       - Volo.Abp.Auditing.AbpAuditingModule
+2026-05-21 15:25:19.093 +03:30 [DBG]         - Volo.Abp.Json.AbpJsonModule
+2026-05-21 15:25:19.093 +03:30 [DBG]           - Volo.Abp.Json.SystemTextJson.AbpJsonSystemTextJsonModule
+2026-05-21 15:25:19.093 +03:30 [DBG]             - Volo.Abp.Json.AbpJsonAbstractionsModule
+2026-05-21 15:25:19.093 +03:30 [DBG]             - Volo.Abp.Timing.AbpTimingModule
+2026-05-21 15:25:19.093 +03:30 [DBG]         - Volo.Abp.Auditing.AbpAuditingContractsModule
+2026-05-21 15:25:19.093 +03:30 [DBG]       - Volo.Abp.Http.AbpHttpModule
+2026-05-21 15:25:19.093 +03:30 [DBG]         - Volo.Abp.Http.AbpHttpAbstractionsModule
+2026-05-21 15:25:19.093 +03:30 [DBG]         - Volo.Abp.Minify.AbpMinifyModule
+2026-05-21 15:25:19.093 +03:30 [DBG]       - Volo.Abp.Authorization.AbpAuthorizationModule
+2026-05-21 15:25:19.093 +03:30 [DBG]         - Volo.Abp.Authorization.AbpAuthorizationAbstractionsModule
+2026-05-21 15:25:19.093 +03:30 [DBG]       - Volo.Abp.Validation.AbpValidationModule
+2026-05-21 15:25:19.093 +03:30 [DBG]       - Volo.Abp.ExceptionHandling.AbpExceptionHandlingModule
+2026-05-21 15:25:19.093 +03:30 [DBG]       - Volo.Abp.AspNetCore.AbpAspNetCoreAbstractionsModule
+2026-05-21 15:25:19.093 +03:30 [DBG]   - ObjectStorageService.Application.Contracts.ObjectStorageServiceApplicationContractsModule
+2026-05-21 15:25:19.093 +03:30 [DBG]     - ObjectStorageService.Domain.Shared.ObjectStorageServiceDomainSharedModule
+2026-05-21 15:25:19.093 +03:30 [DBG]       - Framework.BuildingBlock.Domain.Shared.BuildingBlockDomainSharedModule
+2026-05-21 15:25:19.094 +03:30 [DBG]         - Framework.Localization.LocalizationModule
+2026-05-21 15:25:19.094 +03:30 [DBG]         - Volo.Abp.Domain.AbpDddDomainSharedModule
+2026-05-21 15:25:19.094 +03:30 [DBG]         - Volo.Abp.Caching.StackExchangeRedis.AbpCachingStackExchangeRedisModule
+2026-05-21 15:25:19.094 +03:30 [DBG]           - Volo.Abp.Caching.AbpCachingModule
+2026-05-21 15:25:19.094 +03:30 [DBG]             - Volo.Abp.Serialization.AbpSerializationModule
+2026-05-21 15:25:19.094 +03:30 [DBG]     - Framework.BuildingBlock.Application.Contracts.BuildingBlockApplicationContractsModule
+2026-05-21 15:25:19.094 +03:30 [DBG]       - Volo.Abp.Application.AbpDddApplicationContractsModule
+2026-05-21 15:25:19.094 +03:30 [DBG]   - ObjectStorageService.Application.ObjectStorageServiceApplicationModule
+2026-05-21 15:25:19.094 +03:30 [DBG]     - Volo.Abp.AutoMapper.AbpLuckyPennyAutoMapperModule
+2026-05-21 15:25:19.094 +03:30 [DBG]       - Volo.Abp.ObjectMapping.AbpObjectMappingModule
+2026-05-21 15:25:19.094 +03:30 [DBG]     - Framework.BuildingBlock.Application.BuildingBlockApplicationModule
+2026-05-21 15:25:19.094 +03:30 [DBG]       - Framework.BuildingBlock.Domain.BuildingBlockDomainModule
+2026-05-21 15:25:19.094 +03:30 [DBG]         - Volo.Abp.Domain.AbpDddDomainModule
+2026-05-21 15:25:19.094 +03:30 [DBG]           - Volo.Abp.EventBus.AbpEventBusModule
+2026-05-21 15:25:19.094 +03:30 [DBG]             - Volo.Abp.Guids.AbpGuidsModule
+2026-05-21 15:25:19.094 +03:30 [DBG]             - Volo.Abp.BackgroundWorkers.AbpBackgroundWorkersModule
+2026-05-21 15:25:19.094 +03:30 [DBG]             - Volo.Abp.DistributedLocking.AbpDistributedLockingAbstractionsModule
+2026-05-21 15:25:19.094 +03:30 [DBG]           - Volo.Abp.Specifications.AbpSpecificationsModule
+2026-05-21 15:25:19.094 +03:30 [DBG]       - Volo.Abp.Application.AbpDddApplicationModule
+2026-05-21 15:25:19.094 +03:30 [DBG]         - Volo.Abp.Features.AbpFeaturesModule
+2026-05-21 15:25:19.094 +03:30 [DBG]         - Volo.Abp.GlobalFeatures.AbpGlobalFeaturesModule
+2026-05-21 15:25:19.094 +03:30 [DBG]       - Framework.Security.FrameworkSecurityModule
+2026-05-21 15:25:19.094 +03:30 [DBG]     - ObjectStorageService.Domain.ObjectStorageServiceDomainModule
+2026-05-21 15:25:19.094 +03:30 [DBG]   - ObjectStorageService.EntityFrameworkCore.ObjectStorageServiceEntityFrameworkCoreModule
+2026-05-21 15:25:19.094 +03:30 [DBG]     - Framework.BuildingBlock.EntityFrameworkCore.BuildingBlockEntityFrameworkCoreModule
+2026-05-21 15:25:19.094 +03:30 [DBG]       - Volo.Abp.EntityFrameworkCore.AbpEntityFrameworkCoreModule
+2026-05-21 15:25:19.094 +03:30 [DBG]     - Volo.Abp.EntityFrameworkCore.PostgreSql.AbpEntityFrameworkCorePostgreSqlModule
+2026-05-21 15:25:19.094 +03:30 [DBG]   - ObjectStorageService.HttpApi.ObjectStorageServiceHttpApiModule
+2026-05-21 15:25:19.094 +03:30 [DBG]     - Framework.BuildingBlock.HttpApi.BuildingBlockHttpApiModule
+2026-05-21 15:25:19.094 +03:30 [DBG]       - Volo.Abp.AspNetCore.Mvc.AbpAspNetCoreMvcModule
+2026-05-21 15:25:19.094 +03:30 [DBG]         - Volo.Abp.ApiVersioning.AbpApiVersioningAbstractionsModule
+2026-05-21 15:25:19.094 +03:30 [DBG]         - Volo.Abp.AspNetCore.Mvc.AbpAspNetCoreMvcContractsModule
+2026-05-21 15:25:19.094 +03:30 [DBG]         - Volo.Abp.UI.Navigation.AbpUiNavigationModule
+2026-05-21 15:25:19.094 +03:30 [DBG]           - Volo.Abp.UI.AbpUiModule
+2026-05-21 15:25:19.094 +03:30 [DBG]   - Volo.Abp.AspNetCore.Serilog.AbpAspNetCoreSerilogModule
+2026-05-21 15:25:19.265 +03:30 [INF] User profile is available. Using 'C:\Users\BSLATech\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-21 15:25:19.322 +03:30 [WRN] You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2026-05-21 15:25:19.330 +03:30 [INF] Registered 2 endpoints in 857 milliseconds.
+2026-05-21 15:25:19.434 +03:30 [INF] No validators found in the system!
+2026-05-21 15:25:19.439 +03:30 [INF] Initialized all ABP modules.
+2026-05-21 15:25:19.635 +03:30 [INF] Now listening on: https://localhost:7298
+2026-05-21 15:25:19.635 +03:30 [INF] Now listening on: http://localhost:5145
+2026-05-21 15:25:19.635 +03:30 [INF] Now listening on: https://192.168.2.29:5145
+2026-05-21 15:25:19.671 +03:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-21 15:25:19.671 +03:30 [INF] Hosting environment: Development
+2026-05-21 15:25:19.671 +03:30 [INF] Content root path: D:\Projects\BSLA\NewStruct\ObjectStorageService\ObjectStorageService.Host
+2026-05-21 15:25:44.819 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - multipart/form-data; boundary=----WebKitFormBoundaryD5YeahqQiciGeFU8 57917
+2026-05-21 15:25:44.882 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:25:44.882 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:25:44.902 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:25:45.050 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:25:45.060 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - 200 null application/json; charset=utf-8 243.6524ms
+2026-05-21 15:26:03.202 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - application/json 309
+2026-05-21 15:26:03.204 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:26:03.204 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:26:03.204 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:26:04.187 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:26:04.188 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - 200 null application/json; charset=utf-8 985.6126ms
+2026-05-21 15:27:23.260 +03:30 [INF] Request starting HTTP/2 GET https://localhost:7298/swagger/index.html - null null
+2026-05-21 15:27:23.359 +03:30 [INF] Request finished HTTP/2 GET https://localhost:7298/swagger/index.html - 200 null text/html; charset=utf-8 99.0779ms
+2026-05-21 15:27:23.363 +03:30 [INF] Request starting HTTP/2 GET https://localhost:7298/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-21 15:27:23.367 +03:30 [INF] Request finished HTTP/2 GET https://localhost:7298/_framework/aspnetcore-browser-refresh.js - 200 14955 application/javascript; charset=utf-8 4.7759ms
+2026-05-21 15:27:23.368 +03:30 [INF] Request starting HTTP/2 GET https://localhost:7298/_vs/browserLink - null null
+2026-05-21 15:27:23.389 +03:30 [INF] Request finished HTTP/2 GET https://localhost:7298/_vs/browserLink - 200 null text/javascript; charset=UTF-8 20.6637ms
+2026-05-21 15:27:23.440 +03:30 [INF] Request starting HTTP/2 GET https://localhost:7298/swagger/ObjectStorageService Api/swagger.json - null null
+2026-05-21 15:27:23.559 +03:30 [INF] Request starting HTTP/2 GET https://localhost:7298/_vs/browserLink - null null
+2026-05-21 15:27:23.559 +03:30 [INF] Request starting HTTP/2 GET https://localhost:7298/_framework/aspnetcore-browser-refresh.js - null null
+2026-05-21 15:27:23.560 +03:30 [INF] Request finished HTTP/2 GET https://localhost:7298/_framework/aspnetcore-browser-refresh.js - 200 14955 application/javascript; charset=utf-8 1.1955ms
+2026-05-21 15:27:23.592 +03:30 [INF] Request finished HTTP/2 GET https://localhost:7298/_vs/browserLink - 200 null text/javascript; charset=UTF-8 32.6434ms
+2026-05-21 15:27:23.761 +03:30 [INF] Request finished HTTP/2 GET https://localhost:7298/swagger/ObjectStorageService Api/swagger.json - 200 null application/json; charset=utf-8 321.2975ms
+2026-05-21 15:27:36.561 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - multipart/form-data; boundary=----WebKitFormBoundary1qCDH10CYZAlRCwP 57917
+2026-05-21 15:27:36.561 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:27:36.561 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:27:36.561 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:27:36.583 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:27:36.583 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - 200 null application/json; charset=utf-8 22.5351ms
+2026-05-21 15:27:58.070 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - application/json 319
+2026-05-21 15:27:58.071 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:27:58.071 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:27:58.071 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:28:12.942 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:28:12.942 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - 200 null application/json; charset=utf-8 14871.8461ms
+2026-05-21 15:28:46.117 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - multipart/form-data; boundary=----WebKitFormBoundaryo4RxfCI8FDnluLCS 57917
+2026-05-21 15:28:46.117 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:28:46.117 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:28:46.118 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:28:46.133 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:28:46.133 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - 200 null application/json; charset=utf-8 15.8806ms
+2026-05-21 15:28:58.352 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - application/json 291
+2026-05-21 15:28:58.353 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:28:58.353 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:28:58.353 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:29:13.945 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:29:14.484 +03:30 [ERR] An error occurred while sending the request.
+System.Net.Http.HttpRequestException: An error occurred while sending the request.
+ ---> System.IO.IOException: Unable to read data from the transport connection: The I/O operation has been aborted because of either a thread exit or an application request..
+ ---> System.Net.Sockets.SocketException (995): The I/O operation has been aborted because of either a thread exit or an application request.
+   --- End of inner exception stack trace ---
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource<System.Int32>.GetResult(Int16 token)
+   at System.Net.Http.HttpConnection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.DiagnosticsHandler.SendAsyncCore(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Minio.RequestExtensions.ExecuteTaskCoreAsync(IMinioClient minioClient, HttpRequestMessageBuilder requestMessageBuilder, Boolean isSts, CancellationToken cancellationToken)
+   at Minio.RequestExtensions.<>c__DisplayClass2_0.<<ExecuteTaskAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Minio.RequestExtensions.ExecuteWithRetry(IMinioClient minioClient, Func`1 executeRequestCallback)
+   at Minio.RequestExtensions.ExecuteTaskAsync(IMinioClient minioClient, HttpRequestMessageBuilder requestMessageBuilder, Boolean isSts, CancellationToken cancellationToken)
+   at Minio.MinioClient.PutObjectSinglePartAsync(PutObjectArgs args, CancellationToken cancellationToken, Boolean singleFile)
+   at Minio.MinioClient.PutObjectAsync(PutObjectArgs args, CancellationToken cancellationToken)
+   at FinalizeFilesHandler.Handle(FinalizeFilesRequest request, CancellationToken cancellationToken)
+   at Framework.BuildingBlock.HttpApi.BaseEndpoint`2.ExecuteAsync(TRequest req, CancellationToken ct) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\BaseEndpoints\BaseEndpoint.cs:line 14
+   at FastEndpoints.Endpoint`2.ExecAsync(CancellationToken ct)
+   at FastEndpoints.Endpoint`2.ExecAsync(CancellationToken ct)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteResultWriteResponse(IResult result, HttpContext httpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Volo.Abp.AspNetCore.Security.Claims.AbpDynamicClaimsMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Volo.Abp.AspNetCore.Uow.AbpUnitOfWorkMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Volo.Abp.AspNetCore.Security.AbpSecurityHeadersMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Framework.BuildingBlock.HttpApi.WrapAbpRoutesResponseMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\Middlewares\WrapAbpRoutesResponseMiddleware.cs:line 60
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Framework.BuildingBlock.HttpApi.FrameworkExceptionMiddlware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\Middlewares\FrameworkExceptionMiddlware.cs:line 33
+2026-05-21 15:29:14.519 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - 500 null application/json 16166.9188ms
+2026-05-21 15:29:17.709 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - application/json 291
+2026-05-21 15:29:17.709 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:29:17.709 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:29:17.710 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:29:18.022 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:29:18.416 +03:30 [ERR] Missing SOI marker.
+SixLabors.ImageSharp.InvalidImageContentException: Missing SOI marker.
+   at SixLabors.ImageSharp.Formats.Jpeg.JpegThrowHelper.ThrowInvalidImageContentException(String errorMessage)
+   at SixLabors.ImageSharp.Formats.Jpeg.JpegDecoderCore.ParseStream(BufferedReadStream stream, SpectralConverter spectralConverter, CancellationToken cancellationToken)
+   at SixLabors.ImageSharp.Formats.Jpeg.JpegDecoderCore.Decode[TPixel](BufferedReadStream stream, CancellationToken cancellationToken)
+   at SixLabors.ImageSharp.Formats.ImageDecoderCore.Decode[TPixel](Configuration configuration, Stream stream, CancellationToken cancellationToken)
+   at SixLabors.ImageSharp.Formats.Jpeg.JpegDecoder.Decode[TPixel](JpegDecoderOptions options, Stream stream, CancellationToken cancellationToken)
+   at SixLabors.ImageSharp.Formats.Jpeg.JpegDecoder.Decode(JpegDecoderOptions options, Stream stream, CancellationToken cancellationToken)
+   at SixLabors.ImageSharp.Formats.SpecializedImageDecoder`1.Decode(DecoderOptions options, Stream stream, CancellationToken cancellationToken)
+   at SixLabors.ImageSharp.Formats.ImageDecoder.<>c__DisplayClass3_0.<DecodeAsync>b__0(Stream s, CancellationToken ct)
+   at SixLabors.ImageSharp.Formats.ImageDecoder.<>c__DisplayClass12_0`1.<WithSeekableMemoryStreamAsync>g__PerformActionAndResetPosition|0(Stream s, Int64 position, CancellationToken ct)
+--- End of stack trace from previous location ---
+   at SixLabors.ImageSharp.Formats.ImageDecoder.DecodeAsync(DecoderOptions options, Stream stream, CancellationToken cancellationToken)
+   at SixLabors.ImageSharp.Image.WithSeekableStreamAsync[T](DecoderOptions options, Stream stream, Func`3 action, CancellationToken cancellationToken)
+   at ObjectStorageService.ObjectStorages.Services.ImageProcessingHelper.ResizeAsync(Stream input, Int32 width, Int32 height, CancellationToken ct)
+   at FinalizeFilesHandler.Handle(FinalizeFilesRequest request, CancellationToken cancellationToken)
+   at Framework.BuildingBlock.HttpApi.BaseEndpoint`2.ExecuteAsync(TRequest req, CancellationToken ct) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\BaseEndpoints\BaseEndpoint.cs:line 14
+   at FastEndpoints.Endpoint`2.ExecAsync(CancellationToken ct)
+   at FastEndpoints.Endpoint`2.ExecAsync(CancellationToken ct)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteResultWriteResponse(IResult result, HttpContext httpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Volo.Abp.AspNetCore.Security.Claims.AbpDynamicClaimsMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Volo.Abp.AspNetCore.Uow.AbpUnitOfWorkMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Volo.Abp.AspNetCore.Security.AbpSecurityHeadersMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Framework.BuildingBlock.HttpApi.WrapAbpRoutesResponseMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\Middlewares\WrapAbpRoutesResponseMiddleware.cs:line 60
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Framework.BuildingBlock.HttpApi.FrameworkExceptionMiddlware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\Middlewares\FrameworkExceptionMiddlware.cs:line 33
+2026-05-21 15:29:18.417 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - 500 null application/json 707.7237ms
+2026-05-21 15:29:37.909 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - application/json 291
+2026-05-21 15:29:37.909 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:29:37.909 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:29:37.909 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:29:38.180 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:29:38.180 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - 200 null application/json; charset=utf-8 271.7015ms
+2026-05-21 15:30:22.103 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - application/json 291
+2026-05-21 15:30:22.103 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:30:22.103 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:30:22.103 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:30:22.386 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:30:22.828 +03:30 [ERR] MinIO API responded with message=temp/9d899ae6-5270-4ea5-a68b-c493985eb7d0.jpg
+: Minio.Exceptions.ObjectNotFoundException: MinIO API responded with message=temp/9d899ae6-5270-4ea5-a68b-c493985eb7d0.jpg
+   at Minio.MinioClient.ParseWellKnownErrorNoContent(ResponseResult response)
+   at Minio.MinioClient.ParseErrorNoContent(ResponseResult response)
+   at Minio.MinioClient.ParseError(ResponseResult response)
+   at Minio.Handlers.DefaultErrorHandler.Handle(ResponseResult response)
+   at Minio.RequestExtensions.ExecuteTaskCoreAsync(IMinioClient minioClient, HttpRequestMessageBuilder requestMessageBuilder, Boolean isSts, CancellationToken cancellationToken)
+   at Minio.RequestExtensions.<>c__DisplayClass2_0.<<ExecuteTaskAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Minio.RequestExtensions.ExecuteWithRetry(IMinioClient minioClient, Func`1 executeRequestCallback)
+   at Minio.RequestExtensions.ExecuteTaskAsync(IMinioClient minioClient, HttpRequestMessageBuilder requestMessageBuilder, Boolean isSts, CancellationToken cancellationToken)
+   at Minio.MinioClient.StatObjectAsync(StatObjectArgs args, CancellationToken cancellationToken)
+   at ObjectStorageService.ObjectStorages.Services.MinioProcessingHelper.StatObjectContentTypeAsync(String bucket, String objectName, CancellationToken ct)
+   at FinalizeFilesHandler.Handle(FinalizeFilesRequest request, CancellationToken cancellationToken)
+   at Framework.BuildingBlock.HttpApi.BaseEndpoint`2.ExecuteAsync(TRequest req, CancellationToken ct) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\BaseEndpoints\BaseEndpoint.cs:line 14
+   at FastEndpoints.Endpoint`2.ExecAsync(CancellationToken ct)
+   at FastEndpoints.Endpoint`2.ExecAsync(CancellationToken ct)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteResultWriteResponse(IResult result, HttpContext httpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Volo.Abp.AspNetCore.Security.Claims.AbpDynamicClaimsMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Volo.Abp.AspNetCore.Uow.AbpUnitOfWorkMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Volo.Abp.AspNetCore.Security.AbpSecurityHeadersMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Framework.BuildingBlock.HttpApi.WrapAbpRoutesResponseMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\Middlewares\WrapAbpRoutesResponseMiddleware.cs:line 60
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Framework.BuildingBlock.HttpApi.FrameworkExceptionMiddlware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\Middlewares\FrameworkExceptionMiddlware.cs:line 33
+2026-05-21 15:30:22.829 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - 500 null application/json 726.0251ms
+2026-05-21 15:30:38.408 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - multipart/form-data; boundary=----WebKitFormBoundary6ajBUyIi8Ijt6ozM 57917
+2026-05-21 15:30:38.408 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:30:38.408 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:30:38.408 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:30:38.428 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:30:38.428 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - 200 null application/json; charset=utf-8 20.6182ms
+2026-05-21 15:30:52.447 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - application/json 291
+2026-05-21 15:30:52.447 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:30:52.447 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:30:52.447 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:30:52.719 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:30:52.720 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - 200 null application/json; charset=utf-8 272.5924ms
+2026-05-21 15:31:06.400 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - multipart/form-data; boundary=----WebKitFormBoundaryvd903zGYkhBhlFTJ 57917
+2026-05-21 15:31:06.400 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:31:06.400 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:31:06.400 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:31:06.414 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:31:06.414 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - 200 null application/json; charset=utf-8 14.6954ms
+2026-05-21 15:31:19.100 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - application/json 291
+2026-05-21 15:31:19.100 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:31:19.100 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:31:19.100 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:31:19.373 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:31:19.728 +03:30 [ERR] Missing SOI marker.
+SixLabors.ImageSharp.InvalidImageContentException: Missing SOI marker.
+   at SixLabors.ImageSharp.Formats.Jpeg.JpegThrowHelper.ThrowInvalidImageContentException(String errorMessage)
+   at SixLabors.ImageSharp.Formats.Jpeg.JpegDecoderCore.ParseStream(BufferedReadStream stream, SpectralConverter spectralConverter, CancellationToken cancellationToken)
+   at SixLabors.ImageSharp.Formats.Jpeg.JpegDecoderCore.Decode[TPixel](BufferedReadStream stream, CancellationToken cancellationToken)
+   at SixLabors.ImageSharp.Formats.ImageDecoderCore.Decode[TPixel](Configuration configuration, Stream stream, CancellationToken cancellationToken)
+   at SixLabors.ImageSharp.Formats.Jpeg.JpegDecoder.Decode[TPixel](JpegDecoderOptions options, Stream stream, CancellationToken cancellationToken)
+   at SixLabors.ImageSharp.Formats.Jpeg.JpegDecoder.Decode(JpegDecoderOptions options, Stream stream, CancellationToken cancellationToken)
+   at SixLabors.ImageSharp.Formats.SpecializedImageDecoder`1.Decode(DecoderOptions options, Stream stream, CancellationToken cancellationToken)
+   at SixLabors.ImageSharp.Formats.ImageDecoder.<>c__DisplayClass3_0.<DecodeAsync>b__0(Stream s, CancellationToken ct)
+   at SixLabors.ImageSharp.Formats.ImageDecoder.<>c__DisplayClass12_0`1.<WithSeekableMemoryStreamAsync>g__PerformActionAndResetPosition|0(Stream s, Int64 position, CancellationToken ct)
+--- End of stack trace from previous location ---
+   at SixLabors.ImageSharp.Formats.ImageDecoder.DecodeAsync(DecoderOptions options, Stream stream, CancellationToken cancellationToken)
+   at SixLabors.ImageSharp.Image.WithSeekableStreamAsync[T](DecoderOptions options, Stream stream, Func`3 action, CancellationToken cancellationToken)
+   at ObjectStorageService.ObjectStorages.Services.ImageProcessingHelper.ResizeAsync(Stream input, Int32 width, Int32 height, CancellationToken ct)
+   at FinalizeFilesHandler.Handle(FinalizeFilesRequest request, CancellationToken cancellationToken)
+   at Framework.BuildingBlock.HttpApi.BaseEndpoint`2.ExecuteAsync(TRequest req, CancellationToken ct) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\BaseEndpoints\BaseEndpoint.cs:line 14
+   at FastEndpoints.Endpoint`2.ExecAsync(CancellationToken ct)
+   at FastEndpoints.Endpoint`2.ExecAsync(CancellationToken ct)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteResultWriteResponse(IResult result, HttpContext httpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Volo.Abp.AspNetCore.Security.Claims.AbpDynamicClaimsMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Volo.Abp.AspNetCore.Uow.AbpUnitOfWorkMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Volo.Abp.AspNetCore.Security.AbpSecurityHeadersMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Framework.BuildingBlock.HttpApi.WrapAbpRoutesResponseMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\Middlewares\WrapAbpRoutesResponseMiddleware.cs:line 60
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Framework.BuildingBlock.HttpApi.FrameworkExceptionMiddlware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\Middlewares\FrameworkExceptionMiddlware.cs:line 33
+2026-05-21 15:31:19.729 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - 500 null application/json 629.2773ms
+2026-05-21 15:34:19.556 +03:30 [INF] Starting Gateway.Host.
+2026-05-21 15:34:21.019 +03:30 [DBG] Loaded ABP modules:
+2026-05-21 15:34:21.020 +03:30 [DBG] - ObjectStorageService.Host.ObjectStorageServiceHostModule
+2026-05-21 15:34:21.020 +03:30 [DBG]   - Volo.Abp.Autofac.AbpAutofacModule
+2026-05-21 15:34:21.020 +03:30 [DBG]     - Volo.Abp.Castle.AbpCastleCoreModule
+2026-05-21 15:34:21.020 +03:30 [DBG]   - Volo.Abp.AspNetCore.MultiTenancy.AbpAspNetCoreMultiTenancyModule
+2026-05-21 15:34:21.020 +03:30 [DBG]     - Volo.Abp.MultiTenancy.AbpMultiTenancyModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.Data.AbpDataModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.ObjectExtending.AbpObjectExtendingModule
+2026-05-21 15:34:21.020 +03:30 [DBG]           - Volo.Abp.Localization.AbpLocalizationAbstractionsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]           - Volo.Abp.Validation.AbpValidationAbstractionsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.Uow.AbpUnitOfWorkModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.EventBus.Abstractions.AbpEventBusAbstractionsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.Security.AbpSecurityModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.Settings.AbpSettingsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.MultiTenancy.AbpMultiTenancyAbstractionsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.VirtualFileSystem.AbpVirtualFileSystemModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.Localization.AbpLocalizationModule
+2026-05-21 15:34:21.020 +03:30 [DBG]           - Volo.Abp.Threading.AbpThreadingModule
+2026-05-21 15:34:21.020 +03:30 [DBG]     - Volo.Abp.AspNetCore.AbpAspNetCoreModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.Auditing.AbpAuditingModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.Json.AbpJsonModule
+2026-05-21 15:34:21.020 +03:30 [DBG]           - Volo.Abp.Json.SystemTextJson.AbpJsonSystemTextJsonModule
+2026-05-21 15:34:21.020 +03:30 [DBG]             - Volo.Abp.Json.AbpJsonAbstractionsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]             - Volo.Abp.Timing.AbpTimingModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.Auditing.AbpAuditingContractsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.Http.AbpHttpModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.Http.AbpHttpAbstractionsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.Minify.AbpMinifyModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.Authorization.AbpAuthorizationModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.Authorization.AbpAuthorizationAbstractionsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.Validation.AbpValidationModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.ExceptionHandling.AbpExceptionHandlingModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.AspNetCore.AbpAspNetCoreAbstractionsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]   - ObjectStorageService.Application.Contracts.ObjectStorageServiceApplicationContractsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]     - ObjectStorageService.Domain.Shared.ObjectStorageServiceDomainSharedModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Framework.BuildingBlock.Domain.Shared.BuildingBlockDomainSharedModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Framework.Localization.LocalizationModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.Domain.AbpDddDomainSharedModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.Caching.StackExchangeRedis.AbpCachingStackExchangeRedisModule
+2026-05-21 15:34:21.020 +03:30 [DBG]           - Volo.Abp.Caching.AbpCachingModule
+2026-05-21 15:34:21.020 +03:30 [DBG]             - Volo.Abp.Serialization.AbpSerializationModule
+2026-05-21 15:34:21.020 +03:30 [DBG]     - Framework.BuildingBlock.Application.Contracts.BuildingBlockApplicationContractsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.Application.AbpDddApplicationContractsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]   - ObjectStorageService.Application.ObjectStorageServiceApplicationModule
+2026-05-21 15:34:21.020 +03:30 [DBG]     - Volo.Abp.AutoMapper.AbpLuckyPennyAutoMapperModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.ObjectMapping.AbpObjectMappingModule
+2026-05-21 15:34:21.020 +03:30 [DBG]     - Framework.BuildingBlock.Application.BuildingBlockApplicationModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Framework.BuildingBlock.Domain.BuildingBlockDomainModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.Domain.AbpDddDomainModule
+2026-05-21 15:34:21.020 +03:30 [DBG]           - Volo.Abp.EventBus.AbpEventBusModule
+2026-05-21 15:34:21.020 +03:30 [DBG]             - Volo.Abp.Guids.AbpGuidsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]             - Volo.Abp.BackgroundWorkers.AbpBackgroundWorkersModule
+2026-05-21 15:34:21.020 +03:30 [DBG]             - Volo.Abp.DistributedLocking.AbpDistributedLockingAbstractionsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]           - Volo.Abp.Specifications.AbpSpecificationsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.Application.AbpDddApplicationModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.Features.AbpFeaturesModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.GlobalFeatures.AbpGlobalFeaturesModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Framework.Security.FrameworkSecurityModule
+2026-05-21 15:34:21.020 +03:30 [DBG]     - ObjectStorageService.Domain.ObjectStorageServiceDomainModule
+2026-05-21 15:34:21.020 +03:30 [DBG]   - ObjectStorageService.EntityFrameworkCore.ObjectStorageServiceEntityFrameworkCoreModule
+2026-05-21 15:34:21.020 +03:30 [DBG]     - Framework.BuildingBlock.EntityFrameworkCore.BuildingBlockEntityFrameworkCoreModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.EntityFrameworkCore.AbpEntityFrameworkCoreModule
+2026-05-21 15:34:21.020 +03:30 [DBG]     - Volo.Abp.EntityFrameworkCore.PostgreSql.AbpEntityFrameworkCorePostgreSqlModule
+2026-05-21 15:34:21.020 +03:30 [DBG]   - ObjectStorageService.HttpApi.ObjectStorageServiceHttpApiModule
+2026-05-21 15:34:21.020 +03:30 [DBG]     - Framework.BuildingBlock.HttpApi.BuildingBlockHttpApiModule
+2026-05-21 15:34:21.020 +03:30 [DBG]       - Volo.Abp.AspNetCore.Mvc.AbpAspNetCoreMvcModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.ApiVersioning.AbpApiVersioningAbstractionsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.AspNetCore.Mvc.AbpAspNetCoreMvcContractsModule
+2026-05-21 15:34:21.020 +03:30 [DBG]         - Volo.Abp.UI.Navigation.AbpUiNavigationModule
+2026-05-21 15:34:21.020 +03:30 [DBG]           - Volo.Abp.UI.AbpUiModule
+2026-05-21 15:34:21.020 +03:30 [DBG]   - Volo.Abp.AspNetCore.Serilog.AbpAspNetCoreSerilogModule
+2026-05-21 15:34:21.195 +03:30 [INF] User profile is available. Using 'C:\Users\BSLATech\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-21 15:34:21.252 +03:30 [WRN] You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2026-05-21 15:34:21.261 +03:30 [INF] Registered 2 endpoints in 850 milliseconds.
+2026-05-21 15:34:21.361 +03:30 [INF] No validators found in the system!
+2026-05-21 15:34:21.365 +03:30 [INF] Initialized all ABP modules.
+2026-05-21 15:34:21.542 +03:30 [INF] Now listening on: https://localhost:7298
+2026-05-21 15:34:21.542 +03:30 [INF] Now listening on: http://localhost:5145
+2026-05-21 15:34:21.542 +03:30 [INF] Now listening on: https://192.168.2.29:5145
+2026-05-21 15:34:21.579 +03:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-21 15:34:21.579 +03:30 [INF] Hosting environment: Development
+2026-05-21 15:34:21.579 +03:30 [INF] Content root path: D:\Projects\BSLA\NewStruct\ObjectStorageService\ObjectStorageService.Host
+2026-05-21 15:34:29.638 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - multipart/form-data; boundary=----WebKitFormBoundaryFDKbtAvtXmzhe6EN 57917
+2026-05-21 15:34:29.710 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:34:29.710 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:34:29.733 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:34:29.886 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:34:29.896 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - 200 null application/json; charset=utf-8 259.6685ms
+2026-05-21 15:34:50.705 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - application/json 291
+2026-05-21 15:34:50.707 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:34:50.707 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:34:50.707 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:34:51.232 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:34:51.522 +03:30 [ERR] MinIO API responded with message=temp/f8b4f8cd-2027-40ce-a028-7d42ebe6622f.jpg
+: Minio.Exceptions.ObjectNotFoundException: MinIO API responded with message=temp/f8b4f8cd-2027-40ce-a028-7d42ebe6622f.jpg
+   at Minio.MinioClient.ParseWellKnownErrorNoContent(ResponseResult response)
+   at Minio.MinioClient.ParseErrorNoContent(ResponseResult response)
+   at Minio.MinioClient.ParseError(ResponseResult response)
+   at Minio.Handlers.DefaultErrorHandler.Handle(ResponseResult response)
+   at Minio.RequestExtensions.ExecuteTaskCoreAsync(IMinioClient minioClient, HttpRequestMessageBuilder requestMessageBuilder, Boolean isSts, CancellationToken cancellationToken)
+   at Minio.RequestExtensions.<>c__DisplayClass2_0.<<ExecuteTaskAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Minio.RequestExtensions.ExecuteWithRetry(IMinioClient minioClient, Func`1 executeRequestCallback)
+   at Minio.RequestExtensions.ExecuteTaskAsync(IMinioClient minioClient, HttpRequestMessageBuilder requestMessageBuilder, Boolean isSts, CancellationToken cancellationToken)
+   at Minio.MinioClient.StatObjectAsync(StatObjectArgs args, CancellationToken cancellationToken)
+   at ObjectStorageService.ObjectStorages.Services.MinioProcessingHelper.StatObjectContentTypeAsync(String bucket, String objectName, CancellationToken ct) in D:\Projects\BSLA\NewStruct\ObjectStorageService\ObjectStorageService.Application\ObjectStorages\Services\MinioProcessingHelper.cs:line 35
+   at FinalizeFilesHandler.Handle(FinalizeFilesRequest request, CancellationToken cancellationToken) in D:\Projects\BSLA\NewStruct\ObjectStorageService\ObjectStorageService.Application\ObjectStorages\FinalizeFilesHandler.cs:line 30
+   at Framework.BuildingBlock.HttpApi.BaseEndpoint`2.ExecuteAsync(TRequest req, CancellationToken ct) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\BaseEndpoints\BaseEndpoint.cs:line 14
+   at FastEndpoints.Endpoint`2.ExecAsync(CancellationToken ct)
+   at FastEndpoints.Endpoint`2.ExecAsync(CancellationToken ct)
+   at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteResultWriteResponse(IResult result, HttpContext httpContext)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Volo.Abp.AspNetCore.Security.Claims.AbpDynamicClaimsMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Volo.Abp.AspNetCore.Uow.AbpUnitOfWorkMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Volo.Abp.AspNetCore.Security.AbpSecurityHeadersMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Framework.BuildingBlock.HttpApi.WrapAbpRoutesResponseMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\Middlewares\WrapAbpRoutesResponseMiddleware.cs:line 60
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.InterfaceMiddlewareBinder.<>c__DisplayClass2_0.<<CreateMiddleware>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Framework.BuildingBlock.HttpApi.FrameworkExceptionMiddlware.InvokeAsync(HttpContext context, RequestDelegate next) in D:\Projects\BSLA\NewStruct\building-block\src\Framework.BuildingBlock.HttpApi\Middlewares\FrameworkExceptionMiddlware.cs:line 33
+2026-05-21 15:34:51.620 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - 500 null application/json 915.3128ms
+2026-05-21 15:35:01.367 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - multipart/form-data; boundary=----WebKitFormBoundaryKvsKQRc4em0BdmGx 57917
+2026-05-21 15:35:01.368 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:35:01.368 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:35:01.368 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:35:01.382 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/temp'
+2026-05-21 15:35:01.382 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/temp - 200 null application/json; charset=utf-8 14.6526ms
+2026-05-21 15:35:12.014 +03:30 [INF] Request starting HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - application/json 291
+2026-05-21 15:35:12.014 +03:30 [INF] CORS policy execution failed.
+2026-05-21 15:35:12.014 +03:30 [INF] Request origin https://localhost:7298 does not have permission to access the resource.
+2026-05-21 15:35:12.015 +03:30 [INF] Executing endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:35:12.610 +03:30 [INF] Executed endpoint 'HTTP: POST v1/api/ObjectStorageService/object-storage/finalize'
+2026-05-21 15:35:12.610 +03:30 [INF] Request finished HTTP/2 POST https://localhost:7298/v1/api/ObjectStorageService/object-storage/finalize - 200 null application/json; charset=utf-8 595.8808ms

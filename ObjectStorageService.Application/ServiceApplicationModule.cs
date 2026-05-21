@@ -1,6 +1,7 @@
 using Framework.BuildingBlock.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
+using ObjectStorageService.ObjectStorages.Services;
 using ObjectStorageService.Application.Contracts;
 using ObjectStorageService.Domain;
 using Volo.Abp.AutoMapper;
@@ -30,5 +31,7 @@ public class ObjectStorageServiceApplicationModule : AbpModule
             options.RegisterServicesFromAssembly(typeof(ObjectStorageServiceApplicationModule).Assembly);
         });
         context.Services.AddSingleton<IMinioClientFactory, MinioClientFactory>();
+        context.Services.AddScoped<IImageProcessingHelper, ImageProcessingHelper>();
+        context.Services.AddScoped<IMinioProcessingHelper, MinioProcessingHelper>();
     }
 }

@@ -255,21 +255,10 @@ paket-files/
 **/.abpstudio/
 
 # AuthServer
-src/AuthServer.Web/Logs/*
-src/AuthServer.Web.Host/Logs/*
-src/AuthServer.Web.Public/Logs/*
-src/AuthServer.Web.Public.Host/Logs/*
-src/AuthServer.AuthServer/Logs/*
-src/AuthServer.HttpApi.Host/Logs/*
-src/AuthServer.HttpApi.HostWithIds/Logs/*
-src/AuthServer.DbMigrator/Logs/*
-src/AuthServer.Blazor.Server/Logs/*
-src/AuthServer.Blazor.Server.Tiered/Logs/*
-
+ObjectStorageService.Host/Logs/
 # Use abp install-libs to restore.
 **/wwwroot/libs/*
 
 # IdentityServer temp files
 tempkey.rsa
 tempkey.jwk
-/Permission/PermissionService.Web/Logs

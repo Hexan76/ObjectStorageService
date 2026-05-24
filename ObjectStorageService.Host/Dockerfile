@@ -1,25 +1,19 @@
 # syntax=docker/dockerfile:1
 
-# =========================
-# Build Stage
-# =========================
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-preview AS build
 
 WORKDIR /src
 
 COPY . .
 
-RUN dotnet restore
+RUN dotnet restore ObjectStorageService.sln
 
-RUN dotnet publish \
-    -c Release \
-    -o /app/publish \
+RUN dotnet publish ObjectStorageService.Host/ObjectStorageService.Host.csproj ^
+    -c Release ^
+    -o /app/publish ^
     /p:UseAppHost=false
 
-# =========================
-# Runtime Stage
-# =========================
-FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
+FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/aspnet:10.0-preview AS final
 
 WORKDIR /app
 

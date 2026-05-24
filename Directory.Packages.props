@@ -1,0 +1,76 @@
+<Project>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <MicrosoftVersion>10.0.7</MicrosoftVersion>
+        <AbpVersion>10.3.0</AbpVersion>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageVersion Include="MassTransit.Abstractions" Version="9.1.0" />
+        <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="$(MicrosoftVersion)">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageVersion>
+        <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.Extensions.Options" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.Extensions.Localization" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.Extensions.FileProviders.Composite" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.Extensions.FileProviders.Embedded" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.Extensions.Localization.Abstractions" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.0" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Minio" Version="7.0.0" />
+        <PackageVersion Include="OpenIddict.AspNetCore" Version="7.5.0" />
+        <PackageVersion Include="OpenIddict.EntityFrameworkCore" Version="7.5.0" />
+        <PackageVersion Include="System.Text.Json" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.Extensions.Http" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="$(MicrosoftVersion)" />
+        <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(MicrosoftVersion)" />
+        <!-- /////////////////////////////////////////////////////////////////////// -->
+        <PackageVersion Include="Volo.Abp.Caching.StackExchangeRedis" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.Core" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.Caching" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.Ddd.Domain.Shared" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.Validation" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.Ddd.Domain" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.EntityFrameworkCore" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.Ddd.Application.Contracts" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.Authorization" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.Ddd.Application" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.LuckyPenny.AutoMapper" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.AspNetCore.Mvc" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.AspNetCore.MultiTenancy" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.Autofac" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.AspNetCore.Serilog" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.BackgroundJobs.Domain.Shared" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.BackgroundJobs.Domain" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.BackgroundJobs.EntityFrameworkCore" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.EntityFrameworkCore.PostgreSql" Version="$(AbpVersion)" />
+        <PackageVersion Include="Volo.Abp.EntityFrameworkCore.SqlServer" Version="$(AbpVersion)" />
+        <!-- /////////////////////////////////////////////////////////////////////// -->
+        <PackageVersion Include="AutoMapper" Version="14.0.0" />
+        <PackageVersion Include="AutoMapper.Collection" Version="13.0.0" />
+        <PackageVersion Include="MiniExcel" Version="1.43.1" />
+        <PackageVersion Include="FluentValidation" Version="12.1.1" />
+        <PackageVersion Include="MediatR" Version="14.1.0" />
+        <PackageVersion Include="FastEndpoints" Version="8.1.0" />
+        <PackageVersion Include="FastEndpoints.Swagger" Version="8.1.0" />
+        <PackageVersion Include="MassTransit" Version="9.1.0" />
+        <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
+        <PackageVersion Include="Serilog.Sinks.Async" Version="2.1.0" />
+        <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.12" />
+        <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.1.7" />
+        <PackageVersion Include="Svg.Skia" Version="4.6.0" />
+        <PackageVersion Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.9" />
+    </ItemGroup>
+</Project>

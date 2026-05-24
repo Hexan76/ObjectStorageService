@@ -4,14 +4,14 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 WORKDIR /src
 
-# اپ اصلی
+
 COPY . .
 
-# نصب git (اگر image لازم داشت)
+
 RUN apt-get update && apt-get install -y git
 
-# clone کردن building-block
-RUN git clone https://oauth2:${GITLAB_TOKEN}@git.bsla.dev/microservice/dotnet/building-block.git ../building-block
+
+RUN git clone https://oauth2:${GITLAB_TOKEN}git@gitlab.bsla.dev:microservice/dotnet/building-block.git ../building-block
 
 # restore
 RUN dotnet restore ObjectStorageService.slnx

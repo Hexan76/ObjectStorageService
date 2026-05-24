@@ -13,20 +13,6 @@ RUN apt-get update && apt-get install -y git
 
 RUN git clone -b stage https://oauth2:glpat-1KBqEKkCtTeP2sdZFcjYX286MQp1OjFzCA.01.0y053mgm3@gitlab.bsla.dev/microservice/dotnet/building-block.git ../building-block
 
-# RUN git clone https://github.com/Hexan76/BuildingBlock.git ../building-block
-
-# debug
-RUN echo "=== CURRENT DIR ===" && pwd
-
-RUN echo "=== ROOT ===" && ls -lah /
-
-RUN echo "=== BUILDING BLOCK ===" && ls -lah /building-block || true
-
-RUN echo "=== TREE ===" && find /building-block -maxdepth 4 -type d || true
-
-RUN echo "=== CSPROJ FILES ===" && find /building-block -name "*.csproj" || true
-
-
 # restore
 RUN dotnet restore ObjectStorageService.slnx
 

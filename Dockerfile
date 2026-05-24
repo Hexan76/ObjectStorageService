@@ -11,7 +11,7 @@ COPY . .
 RUN apt-get update && apt-get install -y git
 
 
-RUN git clone https://oauth2:${GITLAB_TOKEN}@gitlab.bsla.dev/microservice/dotnet/building-block.git ../building-block
+RUN git clone https://oauth2:glpat-1KBqEKkCtTeP2sdZFcjYX286MQp1OjFzCA.01.0y053mgm3@gitlab.bsla.dev/microservice/dotnet/building-block.git ../building-block
 
 # restore
 RUN dotnet restore ObjectStorageService.slnx

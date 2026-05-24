@@ -8,9 +8,9 @@ COPY . .
 
 RUN dotnet restore ObjectStorageService.sln
 
-RUN dotnet publish ObjectStorageService.Host/ObjectStorageService.Host.csproj ^
-    -c Release ^
-    -o /app/publish ^
+RUN dotnet publish ObjectStorageService.Host/ObjectStorageService.Host.csproj \
+    -c Release \
+    -o /app/publish \
     /p:UseAppHost=false
 
 FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/aspnet:10.0-preview AS final

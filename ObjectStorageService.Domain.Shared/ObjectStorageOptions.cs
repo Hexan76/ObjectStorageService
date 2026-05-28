@@ -14,6 +14,7 @@ public class ObjectStorageOptions
     public string DestinationSecret { get; set; }
     public string BucketDestination { get; set; }
 
+    public string Environment { get; set; } = "stage";
     public string SvgFileFullName { get; set; }
 
     public string PublicBaseUrl { get; set; } = default!;

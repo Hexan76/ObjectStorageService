@@ -1,3 +1,4 @@
+using ObjectStorageService.ObjectStorages;
 using Volo.Abp.Caching;
 
 namespace ObjectStorageService.Domain;
@@ -9,6 +10,7 @@ public class ObjectTempCache
 
     public string ObjectKey { get; set; } = null!;
     public string FileName { get; set; } = null!;
+    public StorageAppType App { get; set; } 
 
     public string ContentType { get; set; } = null!;
 

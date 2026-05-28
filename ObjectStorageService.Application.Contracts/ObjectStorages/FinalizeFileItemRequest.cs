@@ -8,7 +8,7 @@ public class FinalizeFileItemRequest
 
     public string EntityKey { get; set; } = null!;
 
-    public string AppName { get; set; } = null!;
+    public StorageAppType AppType { get; set; } 
 
     public string? FileName { get; set; }
 

@@ -61,67 +61,70 @@ public class FinalizeFilesHandler(
             variants.Add(ToVariant("original", originalKey));
 
 
-            // ---------------------------
-            // Compressed
-            // ---------------------------
-            //var compressedKey = GetStorageKeyFileName(basePath, fileName, "webp");
-
-            //var compressedLoaded = await _imageHelper.CompressToWebp(src, 50 * 1024, cancellationToken);
-
-            //await _minioHelper.PutObjectAsync(_bucket, compressedKey, compressedLoaded.Stream, _imageHelper.GetContentType(compressedLoaded.Format), cancellationToken);
-
-            //variants.Add(ToVariant("Compressed", compressedKey));
-
-            // ---------------------------
-            // THUMBNAIL
-            // ---------------------------
-            if (file.GenerateThumbnail)
+            if ("media" == domain)
             {
-                var (outStream, format) = await _imageHelper.Thumbnail(src, 300, 300, cancellationToken);
+                // ---------------------------
+                // Compressed
+                // ---------------------------
+                var compressedKey = GetStorageKeyFileName(basePath, fileName, "webp");
 
-                var thumbKey = GetStorageKeyFileName(basePath, $"{fileName}_thumbnail", format.FileExtensions.First());
+                var compressedLoaded = await _imageHelper.CompressToWebp(src, 50 * 1024, cancellationToken);
 
-                await _minioHelper.PutObjectAsync(_bucket, thumbKey, outStream, _imageHelper.GetContentType(format), cancellationToken);
+                await _minioHelper.PutObjectAsync(_bucket, compressedKey, compressedLoaded.Stream, _imageHelper.GetContentType(compressedLoaded.Format), cancellationToken);
 
-                variants.Add(ToVariant("thumbnail", thumbKey));
-            }
+                variants.Add(ToVariant("Compressed", compressedKey));
 
-            // ---------------------------
-            // SIZES
-            // ---------------------------
-            foreach (var size in file.Sizes)
-            {
-                var (w, h) = size switch
+                // ---------------------------
+                // THUMBNAIL
+                // ---------------------------
+                if (file.GenerateThumbnail)
                 {
-                    ImageSize.Small => (300, 300),
-                    ImageSize.Medium => (800, 800),
-                    ImageSize.Large => (1600, 1600),
-                    _ => (800, 800)
-                };
+                    var (outStream, format) = await _imageHelper.Thumbnail(src, 300, 300, cancellationToken);
+
+                    var thumbKey = GetStorageKeyFileName(basePath, $"{fileName}_thumbnail", format.FileExtensions.First());
+
+                    await _minioHelper.PutObjectAsync(_bucket, thumbKey, outStream, _imageHelper.GetContentType(format), cancellationToken);
+
+                    variants.Add(ToVariant("thumbnail", thumbKey));
+                }
+
+                // ---------------------------
+                // SIZES
+                // ---------------------------
+                foreach (var size in file.Sizes)
+                {
+                    var (w, h) = size switch
+                    {
+                        ImageSize.Small => (300, 300),
+                        ImageSize.Medium => (800, 800),
+                        ImageSize.Large => (1600, 1600),
+                        _ => (800, 800)
+                    };
 
 
-                var (outStream, format) = await _imageHelper.ResizeAsync(src, w, h, cancellationToken);
-                var key = GetStorageKeyFileName(basePath, $"{fileName}_{size.ToString().ToLower()}", format.FileExtensions.First());
+                    var (outStream, format) = await _imageHelper.ResizeAsync(src, w, h, cancellationToken);
+                    var key = GetStorageKeyFileName(basePath, $"{fileName}_{size.ToString().ToLower()}", format.FileExtensions.First());
 
-                await _minioHelper.PutObjectAsync(_bucket, key, outStream, _imageHelper.GetContentType(format), cancellationToken);
+                    await _minioHelper.PutObjectAsync(_bucket, key, outStream, _imageHelper.GetContentType(format), cancellationToken);
 
-                variants.Add(ToVariant(size.ToString().ToLower(), key));
+                    variants.Add(ToVariant(size.ToString().ToLower(), key));
+                }
+
+                // ---------------------------
+                // WATERMARK
+                // ---------------------------
+                if (file.Watermark)
+                {
+                    var (outStream, format) = await _imageHelper.ApplyWatermarkAsync(src, cancellationToken);
+
+                    var wmKey = GetStorageKeyFileName(basePath, $"{fileName}_watermark", format.FileExtensions.First());
+
+                    await _minioHelper.PutObjectAsync(_bucket, wmKey, outStream, _imageHelper.GetContentType(format), cancellationToken);
+
+                    variants.Add(ToVariant("watermark", wmKey));
+                }
+
             }
-
-            // ---------------------------
-            // WATERMARK
-            // ---------------------------
-            if (file.Watermark)
-            {
-                var (outStream, format) = await _imageHelper.ApplyWatermarkAsync(src, cancellationToken);
-
-                var wmKey = GetStorageKeyFileName(basePath, $"{fileName}_watermark", format.FileExtensions.First());
-
-                await _minioHelper.PutObjectAsync(_bucket, wmKey, outStream, _imageHelper.GetContentType(format), cancellationToken);
-
-                variants.Add(ToVariant("watermark", wmKey));
-            }
-
             // ---------------------------
             // DELETE TEMP
             // ---------------------------
@@ -164,13 +167,55 @@ public class FinalizeFilesHandler(
         };
 
     private static string MimeToExtension(string mime)
-        => mime switch
+        => mime?.ToLowerInvariant() switch
         {
-            "image/jpeg" => "jpg",
+            // images
+            "image/jpeg" or "image/jpg" or "image/pjpeg" => "jpg",
             "image/png" => "png",
             "image/webp" => "webp",
             "image/gif" => "gif",
+            "image/bmp" or "image/x-ms-bmp" => "bmp",
+            "image/tiff" or "image/tif" => "tiff",
+            "image/svg+xml" => "svg",
+            "image/avif" => "avif",
+            "image/heic" or "image/heif" => "heic",
+
+            // documents
             "application/pdf" => "pdf",
+            "application/msword" => "doc",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document" => "docx",
+            "application/vnd.ms-excel" => "xls",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" => "xlsx",
+            "application/vnd.ms-powerpoint" => "ppt",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation" => "pptx",
+
+            // text
+            "text/plain" => "txt",
+            "text/csv" => "csv",
+            "text/html" => "html",
+            "text/css" => "css",
+            "text/javascript" => "js",
+
+            // archives
+            "application/zip" => "zip",
+            "application/x-7z-compressed" => "7z",
+            "application/x-rar-compressed" => "rar",
+            "application/gzip" => "gz",
+            "application/x-tar" => "tar",
+
+            // audio
+            "audio/mpeg" => "mp3",
+            "audio/wav" => "wav",
+            "audio/ogg" => "ogg",
+            "audio/webm" => "webm",
+
+            // video
+            "video/mp4" => "mp4",
+            "video/x-msvideo" => "avi",
+            "video/x-matroska" => "mkv",
+            "video/webm" => "webm",
+
+            // fallback
             _ => "bin"
         };
 

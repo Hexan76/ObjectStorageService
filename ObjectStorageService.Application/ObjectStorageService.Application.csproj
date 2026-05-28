@@ -5,6 +5,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="MediatR" />
+        <PackageReference Include="pythonnet" />
         <PackageReference Include="Volo.Abp.LuckyPenny.AutoMapper" />
         <PackageReference Include="Volo.Abp.Ddd.Application" />
         <ProjectReference Include="..\..\building-block\src\Framework.BuildingBlock.Application\Framework.BuildingBlock.Application.csproj" />

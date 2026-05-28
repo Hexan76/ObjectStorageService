@@ -1,14 +1,17 @@
 ﻿using Framework.BuildingBlock.Application.Contracts;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel.Args;
 using Minio.DataModel.Response;
+using ObjectStorageService.Domain;
+using System.Text.RegularExpressions;
+using Volo.Abp.Caching;
 
 namespace ObjectStorageService.ObjectStorages;
 
-public class UploadTempFilesHandler(
-    IOptions<ObjectStorageOptions> options)
+public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDistributedCache<ObjectTempCache> distributedCache)
     : IUploadTempFilesRequestHandler
 {
     private readonly string _destinationBucket = options.Value.BucketDestination;
@@ -45,8 +48,9 @@ public class UploadTempFilesHandler(
             {
                 var tags = new Dictionary<string, string>()
                 {
-                    {"filename",file.FileName},
-                    {"storageEntityType",request.StorageEntityType.ToString()}
+                    {"filename",NormalizeTag(file.FileName)},
+                    {"storageEntityType",request.StorageEntityType.ToString()},
+                    {"storageAppType",request.StorageAppType.ToString()}
                 };
                 response = await _client.PutObjectAsync(
                     new PutObjectArgs()
@@ -69,8 +73,6 @@ public class UploadTempFilesHandler(
                 Id = id,
                 Name = file.FileName,
 
-                ObjectKey = response?.ObjectName,
-
                 MimeType = file.ContentType,
                 Size = (int)file.Length,
 
@@ -79,6 +81,15 @@ public class UploadTempFilesHandler(
                     $"{_destinationBucket}/" +
                     $"{response.ObjectName}",
             });
+            await distributedCache.SetAsync(id.ToString(), new ObjectTempCache()
+            {
+                Id = id,
+                ObjectKey = response?.ObjectName,
+                ContentType = file.ContentType,
+                CreationTime = DateTime.Now,
+                FileName = file.FileName,
+                Size = (int)file.Length,
+            }, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1) });
         }
 
 
@@ -87,5 +98,20 @@ public class UploadTempFilesHandler(
             Result = result,
             Success = true
         };
+    }
+
+    private static string NormalizeTag(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return "unknown";
+
+        value = Path.GetFileNameWithoutExtension(value);
+
+        value = Regex.Replace(
+            value,
+            @"[^a-zA-Z0-9_\-\.]",
+            "_");
+
+        return value[..Math.Min(value.Length, 128)];
     }
 }

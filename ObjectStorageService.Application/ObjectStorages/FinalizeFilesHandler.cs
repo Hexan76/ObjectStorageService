@@ -13,8 +13,9 @@ public class FinalizeFilesHandler(
     IDistributedCache<ObjectTempCache> distributedCache,
     IOptions<ObjectStorageOptions> options) : IFinalizeFilesRequestHandler
 {
-    private readonly string _bucket = options.Value.BucketDestination;
+    private string _bucket = options.Value.BucketDestination;
     private readonly string _baseUrl = options.Value.PublicBaseUrl;
+    private readonly string _environment = options.Value.Environment;
 
     public async Task<MessageContract<FinalizeFilesResponse>> Handle(
         FinalizeFilesRequest request,
@@ -25,6 +26,7 @@ public class FinalizeFilesHandler(
 
         foreach (var file in request.Files)
         {
+            _bucket = StorageAppMapping.GetStorageAppType(file.AppType, _environment);
             var tempObject = await distributedCache.GetAsync(file.Id.ToString());
             var tempKey = tempObject.ObjectKey;
 

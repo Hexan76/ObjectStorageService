@@ -7,7 +7,8 @@ namespace ObjectStorageService.ObjectStorages;
 public enum StorageAppType
 {
     [Description("4Sough")]
-    FourSoughShop= 0,
+    CharSoughShop = 0,
     QasedFood = 1,
-    
+    QasedParcel = 2,
+
 }

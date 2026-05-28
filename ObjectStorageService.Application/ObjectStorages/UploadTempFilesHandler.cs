@@ -15,8 +15,8 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
     : IUploadTempFilesRequestHandler
 {
     private readonly string _destinationBucket = options.Value.BucketDestination;
+    private readonly string _environment = options.Value.Environment;
     private readonly string _baseUrl = options.Value.PublicBaseUrl;
-    private readonly TimeSpan _expirationTime = options.Value.ExpirationTime;
     private readonly IMinioClient _client = new MinioClientFactory(cfg =>
     {
         cfg.WithEndpoint(options.Value.URLDestination)
@@ -54,7 +54,7 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
                 };
                 response = await _client.PutObjectAsync(
                     new PutObjectArgs()
-                        .WithBucket(_destinationBucket)
+                        .WithBucket(StorageAppMapping.GetStorageAppType(request.StorageAppType, _environment))
                         .WithObject(objectName)
                         .WithTagging(new Minio.DataModel.Tags.Tagging(tags, true))
                         .WithStreamData(stream)
@@ -89,6 +89,7 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
                 CreationTime = DateTime.Now,
                 FileName = file.FileName,
                 Size = (int)file.Length,
+                App = request.StorageAppType
             }, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1) });
         }
 

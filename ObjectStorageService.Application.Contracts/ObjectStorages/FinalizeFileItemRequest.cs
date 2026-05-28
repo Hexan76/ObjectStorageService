@@ -2,13 +2,13 @@
 
 public class FinalizeFileItemRequest
 {
-    public string ObjectKey { get; set; }
+    public Guid Id { get; set; }
 
     public StorageEntityType StorageEntityType { get; set; }
 
     public string EntityKey { get; set; } = null!;
 
-    public string Extension { get; set; } = null!;
+    public string AppName { get; set; } = null!;
 
     public string? FileName { get; set; }
 

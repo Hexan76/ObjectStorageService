@@ -2,7 +2,7 @@
 
 public class FinalizeItemResponse
 {
-    public string ObjectKey { get; set; }
+    public Guid Id { get; set; }
 
     public string FileName { get; set; } = null!;
     public string URL { get; set; } = null!;

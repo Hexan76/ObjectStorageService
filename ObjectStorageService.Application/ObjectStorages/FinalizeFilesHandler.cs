@@ -1,14 +1,17 @@
 ﻿using Framework.BuildingBlock.Application.Contracts;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using ObjectStorageService;
+using ObjectStorageService.Domain;
 using ObjectStorageService.ObjectStorages;
 using ObjectStorageService.ObjectStorages.Services;
+using Volo.Abp.Caching;
 
 public class FinalizeFilesHandler(
     IImageProcessingHelper _imageHelper,
     IMinioProcessingHelper _minioHelper,
-    IOptions<ObjectStorageOptions> options)
-    : IFinalizeFilesRequestHandler
+    IDistributedCache<ObjectTempCache> distributedCache,
+    IOptions<ObjectStorageOptions> options) : IFinalizeFilesRequestHandler
 {
     private readonly string _bucket = options.Value.BucketDestination;
     private readonly string _baseUrl = options.Value.PublicBaseUrl;
@@ -22,7 +25,8 @@ public class FinalizeFilesHandler(
 
         foreach (var file in request.Files)
         {
-            var tempKey = file.ObjectKey;
+            var tempObject = await distributedCache.GetAsync(file.Id.ToString());
+            var tempKey = tempObject.ObjectKey;
 
             // ---------------------------
             // METADATA
@@ -30,11 +34,14 @@ public class FinalizeFilesHandler(
             var mimeType = await _minioHelper.StatObjectContentTypeAsync(_bucket, tempKey, cancellationToken);
             var extension = MimeToExtension(mimeType);
 
+
             var domain = ResolveDomainByExtension(extension);
             var entityType = file.StorageEntityType.ToString().ToLower();
 
             var basePath = $"{domain}/{entityType}/{file.EntityKey}";
             var variants = new List<FileVariant>();
+
+            var src = await _minioHelper.GetObjectAsStreamAsync(_bucket, tempKey, cancellationToken);
 
             // ---------------------------
             // ORIGINAL
@@ -48,21 +55,31 @@ public class FinalizeFilesHandler(
                     tags.FirstOrDefault().Value);
             }
 
-            var originalKey = $"{basePath}/{fileName}{extension}";
+            var originalKey = GetStorageKeyFileName(basePath, fileName, extension);
 
             await _minioHelper.CopyObjectAsync(_bucket, originalKey, tempKey, cancellationToken);
             variants.Add(ToVariant("original", originalKey));
+
+
+            // ---------------------------
+            // Compressed
+            // ---------------------------
+            //var compressedKey = GetStorageKeyFileName(basePath, fileName, "webp");
+
+            //var compressedLoaded = await _imageHelper.CompressToWebp(src, 50 * 1024, cancellationToken);
+
+            //await _minioHelper.PutObjectAsync(_bucket, compressedKey, compressedLoaded.Stream, _imageHelper.GetContentType(compressedLoaded.Format), cancellationToken);
+
+            //variants.Add(ToVariant("Compressed", compressedKey));
 
             // ---------------------------
             // THUMBNAIL
             // ---------------------------
             if (file.GenerateThumbnail)
             {
+                var (outStream, format) = await _imageHelper.Thumbnail(src, 300, 300, cancellationToken);
 
-                var thumbKey = $"{basePath}/{fileName}_thumbnail{extension}";
-
-                var src = await _minioHelper.GetObjectAsStreamAsync(_bucket, tempKey, cancellationToken);
-                var (outStream, format) = await _imageHelper.ResizeAsync(src, 300, 300, cancellationToken);
+                var thumbKey = GetStorageKeyFileName(basePath, $"{fileName}_thumbnail", format.FileExtensions.First());
 
                 await _minioHelper.PutObjectAsync(_bucket, thumbKey, outStream, _imageHelper.GetContentType(format), cancellationToken);
 
@@ -82,10 +99,9 @@ public class FinalizeFilesHandler(
                     _ => (800, 800)
                 };
 
-                var key = $"{basePath}/{fileName}_{size.ToString().ToLower()}{extension}";
 
-                var src = await _minioHelper.GetObjectAsStreamAsync(_bucket, tempKey, cancellationToken);
                 var (outStream, format) = await _imageHelper.ResizeAsync(src, w, h, cancellationToken);
+                var key = GetStorageKeyFileName(basePath, $"{fileName}_{size.ToString().ToLower()}", format.FileExtensions.First());
 
                 await _minioHelper.PutObjectAsync(_bucket, key, outStream, _imageHelper.GetContentType(format), cancellationToken);
 
@@ -97,10 +113,9 @@ public class FinalizeFilesHandler(
             // ---------------------------
             if (file.Watermark)
             {
-                var wmKey = $"{basePath}/{fileName}_watermark{extension}";
-
-                var src = await _minioHelper.GetObjectAsStreamAsync(_bucket, tempKey, cancellationToken);
                 var (outStream, format) = await _imageHelper.ApplyWatermarkAsync(src, cancellationToken);
+
+                var wmKey = GetStorageKeyFileName(basePath, $"{fileName}_watermark", format.FileExtensions.First());
 
                 await _minioHelper.PutObjectAsync(_bucket, wmKey, outStream, _imageHelper.GetContentType(format), cancellationToken);
 
@@ -117,10 +132,12 @@ public class FinalizeFilesHandler(
             // ---------------------------
             result.Files.Add(new FinalizeItemResponse
             {
-                ObjectKey = file.ObjectKey,
+                Id = file.Id,
                 URL = BuildUrl(originalKey),
                 Variants = variants
             });
+
+            await distributedCache.RemoveAsync(file.Id.ToString());
         }
 
         return new AcceptMessage<FinalizeFilesResponse>
@@ -141,21 +158,25 @@ public class FinalizeFilesHandler(
     private static string ResolveDomainByExtension(string extension)
         => extension.ToLower() switch
         {
-            ".jpg" or ".jpeg" or ".png" or ".webp" or ".gif" or ".bmp" => "media",
-            ".pdf" or ".doc" or ".docx" or ".xls" or ".xlsx" => "docs",
+            "jpg" or "jpeg" or "png" or "webp" or "gif" or "bmp" => "media",
+            "pdf" or "doc" or "docx" or "xls" or "xlsx" => "docs",
             _ => "obj"
         };
 
     private static string MimeToExtension(string mime)
         => mime switch
         {
-            "image/jpeg" => ".jpg",
-            "image/png" => ".png",
-            "image/webp" => ".webp",
-            "image/gif" => ".gif",
-            "application/pdf" => ".pdf",
-            _ => ".bin"
+            "image/jpeg" => "jpg",
+            "image/png" => "png",
+            "image/webp" => "webp",
+            "image/gif" => "gif",
+            "application/pdf" => "pdf",
+            _ => "bin"
         };
 
+    private static string GetStorageKeyFileName(string basePath, string fileName, string extension)
+    {
+        return $"{basePath}/{fileName}.{extension}";
+    }
 
 }

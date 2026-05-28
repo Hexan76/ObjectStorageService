@@ -17,6 +17,8 @@ public class ObjectStorageOptions
     public string SvgFileFullName { get; set; }
 
     public string PublicBaseUrl { get; set; } = default!;
+    public bool IsCompressWebp { get; set; } = true;
+    public string CompressMimeType { get; set; } = "image/webp";
     public TimeSpan ExpirationTime { get; set; } = TimeSpan.FromDays(1);
 
 }

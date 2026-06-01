@@ -138,6 +138,9 @@ public class FinalizeFilesHandler(
             result.Files.Add(new FinalizeItemResponse
             {
                 Id = file.Id,
+                FileName = tempObject.FileName,
+                MimeType = tempObject.ContentType,
+                Size= tempObject.Size,
                 URL = BuildUrl(originalKey),
                 Variants = variants
             });
@@ -147,7 +150,7 @@ public class FinalizeFilesHandler(
 
         return new AcceptMessage<FinalizeFilesResponse>
         {
-            Data = result
+            Result = result
         };
     }
 

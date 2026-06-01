@@ -94,11 +94,8 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
         }
 
 
-        return new ResultApi<UploadTempFilesResponse>
-        {
-            Result = result,
-            Success = true
-        };
+        return MessageContract<UploadTempFilesResponse>.Success(result);
+        
     }
 
     private static string NormalizeTag(string value)

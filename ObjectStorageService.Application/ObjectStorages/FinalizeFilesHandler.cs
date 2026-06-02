@@ -137,6 +137,9 @@ public class FinalizeFilesHandler(
             // RESPONSE
             // ---------------------------
             
+            if (request.IsTransaction is true)
+                await distributedCache.RemoveAsync(file.Id.ToString());
+
             result.Files.Add(new FinalizeItemResponse
             {
                 Id = file.Id,
@@ -153,7 +156,6 @@ public class FinalizeFilesHandler(
                     )
             });
 
-            await distributedCache.RemoveAsync(file.Id.ToString());
         }
 
         return new AcceptMessage<FinalizeFilesResponse>

@@ -1,0 +1,6 @@
+@ObjectStorageService.Host_HostAddress = http://localhost:5145
+
+GET {{ObjectStorageService.Host_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

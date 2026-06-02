@@ -136,14 +136,21 @@ public class FinalizeFilesHandler(
             // ---------------------------
             // RESPONSE
             // ---------------------------
+            
             result.Files.Add(new FinalizeItemResponse
             {
                 Id = file.Id,
                 FileName = tempObject.FileName,
                 MimeType = tempObject.ContentType,
+                ObjectKey = tempObject.ObjectKey,
                 Size = tempObject.Size,
                 URL = BuildUrl(originalKey),
                 Variants = variants
+                    .GroupBy(x => x.Type)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.First().Url
+                    )
             });
 
             await distributedCache.RemoveAsync(file.Id.ToString());

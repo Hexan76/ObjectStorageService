@@ -130,7 +130,8 @@ public class FinalizeFilesHandler(
             // ---------------------------
             // DELETE TEMP
             // ---------------------------
-            await _minioHelper.RemoveObjectAsync(_bucket, tempKey, cancellationToken);
+            if (request.IsTransaction is true)
+                await _minioHelper.RemoveObjectAsync(_bucket, tempKey, cancellationToken);
 
             // ---------------------------
             // RESPONSE
@@ -140,7 +141,7 @@ public class FinalizeFilesHandler(
                 Id = file.Id,
                 FileName = tempObject.FileName,
                 MimeType = tempObject.ContentType,
-                Size= tempObject.Size,
+                Size = tempObject.Size,
                 URL = BuildUrl(originalKey),
                 Variants = variants
             });

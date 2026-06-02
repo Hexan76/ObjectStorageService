@@ -39,7 +39,7 @@ public class ObjectStorageServiceDomainSharedModule : AbpModule
             options.DestinationSecret = objectStorageSection["DestinationSecret"] ?? "DestinationSecret";
             options.BucketDestination = objectStorageSection["BucketDestination"] ?? "4sough-stage";
 
-            options.BucketDestination = objectStorageSection["Environment"] ?? "stage";
+            options.Environment = objectStorageSection["Environment"] ?? "stage";
 
             options.SvgFileFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "svg.svg");
             options.PublicBaseUrl = objectStorageSection["PublicBaseUrl"] ?? "https://localhost:7298";

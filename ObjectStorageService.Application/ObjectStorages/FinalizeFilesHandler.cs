@@ -130,19 +130,27 @@ public class FinalizeFilesHandler(
             // ---------------------------
             // DELETE TEMP
             // ---------------------------
-            await _minioHelper.RemoveObjectAsync(_bucket, tempKey, cancellationToken);
+            if (request.IsTransaction is true)
+                await _minioHelper.RemoveObjectAsync(_bucket, tempKey, cancellationToken);
 
             // ---------------------------
             // RESPONSE
             // ---------------------------
+            
             result.Files.Add(new FinalizeItemResponse
             {
                 Id = file.Id,
                 FileName = tempObject.FileName,
                 MimeType = tempObject.ContentType,
-                Size= tempObject.Size,
+                ObjectKey = tempObject.ObjectKey,
+                Size = tempObject.Size,
                 URL = BuildUrl(originalKey),
                 Variants = variants
+                    .GroupBy(x => x.Type)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.First().Url
+                    )
             });
 
             await distributedCache.RemoveAsync(file.Id.ToString());

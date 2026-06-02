@@ -137,12 +137,15 @@ public class FinalizeFilesHandler(
             // RESPONSE
             // ---------------------------
             
+            if (request.IsTransaction is true)
+                await distributedCache.RemoveAsync(file.Id.ToString());
+
             result.Files.Add(new FinalizeItemResponse
             {
                 Id = file.Id,
                 FileName = tempObject.FileName,
                 MimeType = tempObject.ContentType,
-                ObjectKey = tempObject.ObjectKey,
+                StorageKey = tempObject.ObjectKey,
                 Size = tempObject.Size,
                 URL = BuildUrl(originalKey),
                 Variants = variants
@@ -153,7 +156,6 @@ public class FinalizeFilesHandler(
                     )
             });
 
-            await distributedCache.RemoveAsync(file.Id.ToString());
         }
 
         return new AcceptMessage<FinalizeFilesResponse>

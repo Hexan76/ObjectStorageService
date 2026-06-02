@@ -1,4 +1,6 @@
-﻿namespace ObjectStorageService.ObjectStorages;
+﻿using System.Text.Json.Serialization;
+
+namespace ObjectStorageService.ObjectStorages;
 
 public class FinalizeItemResponse
 {
@@ -6,7 +8,7 @@ public class FinalizeItemResponse
 
     public string FileName { get; set; } = null!;
     public string URL { get; set; } = null!;
-    public string ObjectKey { get; set; } = null!;
+    public string StorageKey { get; set; } = null!;
 
     public long Size { get; set; }
 

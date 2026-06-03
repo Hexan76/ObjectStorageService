@@ -13,6 +13,6 @@ public class FinalizeItemResponse
     public long Size { get; set; }
 
     public string MimeType { get; set; } = null!;
-    public IDictionary<string,string> Variants { get; set; }
+    public IDictionary<string, string> Variants { get; set; }
 
 }

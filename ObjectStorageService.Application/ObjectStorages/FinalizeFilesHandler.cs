@@ -38,7 +38,7 @@ public class FinalizeFilesHandler(
 
 
             var domain = ResolveDomainByExtension(extension);
-            var entityType = file.StorageEntityType.ToString().ToLower();
+            var entityType = file.StorageEntityType.ToLower();
 
             var basePath = $"{domain}/{entityType}/{file.EntityKey}";
             var variants = new List<FileVariant>();

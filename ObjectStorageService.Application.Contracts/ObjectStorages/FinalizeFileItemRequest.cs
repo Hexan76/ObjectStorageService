@@ -4,7 +4,7 @@ public class FinalizeFileItemRequest
 {
     public Guid Id { get; set; }
 
-    public StorageEntityType StorageEntityType { get; set; }
+    public string StorageEntityType { get; set; }
 
     public string EntityKey { get; set; } = null!;
 

@@ -14,7 +14,7 @@ namespace ObjectStorageService.ObjectStorages;
 public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDistributedCache<ObjectTempCache> distributedCache)
     : IUploadTempFilesRequestHandler
 {
-    private readonly string _destinationBucket = options.Value.BucketDestination;
+    private  string _destinationBucket = options.Value.BucketDestination;
     private readonly string _environment = options.Value.Environment;
     private readonly string _baseUrl = options.Value.PublicBaseUrl;
     private readonly IMinioClient _client = new MinioClientFactory(cfg =>
@@ -36,6 +36,8 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
 
         foreach (IFormFile file in request.Files)
         {
+            _destinationBucket = StorageAppMapping.GetStorageAppType(request.StorageAppType, _environment);
+
             var id = Guid.NewGuid();
 
             var ext = Path.GetExtension(file.FileName);
@@ -49,12 +51,12 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
                 var tags = new Dictionary<string, string>()
                 {
                     {"filename",NormalizeTag(file.FileName)},
-                    {"storageEntityType",request.StorageEntityType.ToString()},
+                    {"storageEntityType",request.StorageEntityType},
                     {"storageAppType",request.StorageAppType.ToString()}
                 };
                 response = await _client.PutObjectAsync(
                     new PutObjectArgs()
-                        .WithBucket(StorageAppMapping.GetStorageAppType(request.StorageAppType, _environment))
+                        .WithBucket(_destinationBucket)
                         .WithObject(objectName)
                         .WithTagging(new Minio.DataModel.Tags.Tagging(tags, true))
                         .WithStreamData(stream)

@@ -5,7 +5,7 @@ namespace ObjectStorageService.ObjectStorages;
 
 public class UploadTempFilesRequest : IFrameworkRequest<UploadTempFilesResponse>
 {
-    public StorageEntityType StorageEntityType { get; set; }
+    public string StorageEntityType { get; set; }
     public StorageAppType StorageAppType { get; set; }
     public List<IFormFile> Files { get; set; } = new();
 }

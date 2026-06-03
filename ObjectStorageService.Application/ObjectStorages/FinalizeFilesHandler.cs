@@ -74,7 +74,7 @@ public class FinalizeFilesHandler(
 
                 await _minioHelper.PutObjectAsync(_bucket, compressedKey, compressedLoaded.Stream, _imageHelper.GetContentType(compressedLoaded.Format), cancellationToken);
 
-                variants.Add(ToVariant("Compressed", compressedKey));
+                variants.Add(ToVariant("compressed", compressedKey));
 
                 // ---------------------------
                 // THUMBNAIL

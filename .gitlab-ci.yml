@@ -28,16 +28,16 @@ build_image:
       echo "Preparing docker context..."
 
       rm -rf .docker-context
-      mkdir -p .docker-context/catalog-service
+      mkdir -p .docker-context/object-storage-service
 
       echo "Copying current project..."
       tar \
         --exclude=".git" \
         --exclude=".docker-context" \
         -C "$CI_PROJECT_DIR" \
-        -cf - . | tar -C "$CI_PROJECT_DIR/.docker-context/catalog-service" -xf -
+        -cf - . | tar -C "$CI_PROJECT_DIR/.docker-context/object-storage-service" -xf -
 
-      echo "Cloning building-block beside catalog-service..."
+      echo "Cloning building-block beside object-storage-service..."
       git clone --depth 1 \
         -b "$BUILDING_BLOCK_BRANCH" \
         "https://${BUILDING_BLOCK_USERNAME}:${BUILDING_BLOCK_TOKEN}@gitlab.bsla.dev/microservice/dotnet/building-block.git" \
@@ -51,7 +51,7 @@ build_image:
         --platform linux/arm64 \
         --provenance=false \
         -t "$CI_REGISTRY_IMAGE:$IMAGE_TAG" \
-        -f "$CI_PROJECT_DIR/.docker-context/catalog-service/Dockerfile" \
+        -f "$CI_PROJECT_DIR/.docker-context/object-storage-service/Dockerfile" \
         "$CI_PROJECT_DIR/.docker-context"
 
 push_image:

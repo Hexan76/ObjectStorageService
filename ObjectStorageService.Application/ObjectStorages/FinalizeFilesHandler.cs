@@ -38,7 +38,7 @@ public class FinalizeFilesHandler(
 
 
             var domain = ResolveDomainByExtension(extension);
-            var entityType = file.StorageEntityType.ToString().ToLower();
+            var entityType = file.StorageEntityType.ToLower();
 
             var basePath = $"{domain}/{entityType}/{file.EntityKey}";
             var variants = new List<FileVariant>();
@@ -74,7 +74,7 @@ public class FinalizeFilesHandler(
 
                 await _minioHelper.PutObjectAsync(_bucket, compressedKey, compressedLoaded.Stream, _imageHelper.GetContentType(compressedLoaded.Format), cancellationToken);
 
-                variants.Add(ToVariant("Compressed", compressedKey));
+                variants.Add(ToVariant("compressed", compressedKey));
 
                 // ---------------------------
                 // THUMBNAIL
@@ -137,12 +137,15 @@ public class FinalizeFilesHandler(
             // RESPONSE
             // ---------------------------
             
+            if (request.IsTransaction is true)
+                await distributedCache.RemoveAsync(file.Id.ToString());
+
             result.Files.Add(new FinalizeItemResponse
             {
                 Id = file.Id,
                 FileName = tempObject.FileName,
                 MimeType = tempObject.ContentType,
-                ObjectKey = tempObject.ObjectKey,
+                StorageKey = tempObject.ObjectKey,
                 Size = tempObject.Size,
                 URL = BuildUrl(originalKey),
                 Variants = variants
@@ -153,7 +156,6 @@ public class FinalizeFilesHandler(
                     )
             });
 
-            await distributedCache.RemoveAsync(file.Id.ToString());
         }
 
         return new AcceptMessage<FinalizeFilesResponse>

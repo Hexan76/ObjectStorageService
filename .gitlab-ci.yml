@@ -1,0 +1,91 @@
+stages:
+  - build
+  - push
+  - deploy
+
+default:
+  tags:
+    - deploy
+
+variables:
+  IMAGE_TAG: "stage"
+  BUILDING_BLOCK_BRANCH: "dev"
+  DOCKER_BUILDKIT: "1"
+  BUILDKIT_PROGRESS: "plain"
+
+before_script:
+  - echo "Running on shell runner"
+  - docker --version
+
+build_image:
+  stage: build
+  only:
+    - stage
+  script:
+    - |
+      set -e
+
+      echo "Preparing docker context..."
+
+      rm -rf .docker-context
+      mkdir -p .docker-context/catalog-service
+
+      echo "Copying current project..."
+      tar \
+        --exclude=".git" \
+        --exclude=".docker-context" \
+        -C "$CI_PROJECT_DIR" \
+        -cf - . | tar -C "$CI_PROJECT_DIR/.docker-context/catalog-service" -xf -
+
+      echo "Cloning building-block beside catalog-service..."
+      git clone --depth 1 \
+        -b "$BUILDING_BLOCK_BRANCH" \
+        "https://${BUILDING_BLOCK_USERNAME}:${BUILDING_BLOCK_TOKEN}@gitlab.bsla.dev/microservice/dotnet/building-block.git" \
+        "$CI_PROJECT_DIR/.docker-context/building-block"
+
+      echo "Login to GitLab Registry..."
+      echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+
+      echo "Building docker image..."
+      docker build \
+        --platform linux/arm64 \
+        --provenance=false \
+        -t "$CI_REGISTRY_IMAGE:$IMAGE_TAG" \
+        -f "$CI_PROJECT_DIR/.docker-context/catalog-service/Dockerfile" \
+        "$CI_PROJECT_DIR/.docker-context"
+
+push_image:
+  stage: push
+  only:
+    - stage
+  needs:
+    - build_image
+  script:
+    - |
+      set -e
+
+      echo "Login to GitLab Registry..."
+      echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+
+      echo "Pushing docker image..."
+      docker push "$CI_REGISTRY_IMAGE:$IMAGE_TAG"
+
+      echo "Image pushed successfully:"
+      echo "$CI_REGISTRY_IMAGE:$IMAGE_TAG"
+
+deploy_coolify:
+  stage: deploy
+  only:
+    - stage
+  needs:
+    - push_image
+  script:
+    - |
+      set -e
+
+      echo "Deploying to Coolify..."
+
+      curl -f -sS "$COOLIFY_WEBHOOK_URL" \
+        -H "Authorization: Bearer $COOLIFY_TOKEN"
+
+      echo "Coolify deployment triggered successfully"

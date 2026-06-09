@@ -4,24 +4,22 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 WORKDIR /src
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY . .
+COPY object-storage-service/ .
 
+COPY building-block ../building-block
+
+RUN dotnet restore ObjectStorageService.Host/ObjectStorageService.Host.csproj
 
 RUN apt-get update && apt-get install -y git
 
-
-RUN git clone -b stage https://oauth2:glpat-1KBqEKkCtTeP2sdZFcjYX286MQp1OjFzCA.01.0y053mgm3@gitlab.bsla.dev/microservice/dotnet/building-block.git ../building-block
-
-# restore
-RUN dotnet restore ObjectStorageService.slnx
-
-# publish
 RUN dotnet publish ObjectStorageService.Host/ObjectStorageService.Host.csproj \
     -c Release \
     -o /app/publish \
     /p:UseAppHost=false
-
 
 FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 

@@ -20,7 +20,7 @@ before_script:
 build_image:
   stage: build
   only:
-    - stage
+    - dev
   script:
     - |
       set -e
@@ -57,7 +57,7 @@ build_image:
 push_image:
   stage: push
   only:
-    - stage
+    - dev
   needs:
     - build_image
   script:
@@ -76,7 +76,7 @@ push_image:
 deploy_coolify:
   stage: deploy
   only:
-    - stage
+    - dev
   needs:
     - push_image
   script:

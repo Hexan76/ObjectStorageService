@@ -87,7 +87,7 @@ deploy_coolify:
 
       COOLIFY_DEPLOY_URL="$(printf '%s' "$COOLIFY_WEBHOOK" | tr -d '\r\n')"
 
-      curl -f -sS "$COOLIFY_WEBHOOK" \
+      curl -f -sS "$COOLIFY_DEPLOY_URL" \
         -H "Authorization: Bearer $COOLIFY_TOKEN"
 
       echo "Deploy request sent to Coolify."

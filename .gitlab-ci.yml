@@ -104,14 +104,18 @@ deploy_coolify:
     - |
       set -e
 
-      echo "Changing Tag Imgae..."
-      curl -f -sS \
+      echo "Changing Image Tag..."
+      echo "URL: ${COOLIFY_URL}/api/v1/applications/${COOLIFY_APPLICATION_ID}"
+      echo "IMAGE_TAG: ${IMAGE_TAG}"
+      echo "TOKEN LENGTH: ${#COOLIFY_TOKEN}"
+
+      curl -v \
         --request PATCH \
         "${COOLIFY_URL}/api/v1/applications/${COOLIFY_APPLICATION_ID}" \
         -H "Authorization: Bearer ${COOLIFY_TOKEN}" \
         -H "Content-Type: application/json" \
         --data "{
-          \"docker_registry_image_tag\": \"${IMAGE_TAG}\")
+          \"docker_registry_image_tag\": \"${IMAGE_TAG}\"
         }"
 
       echo "Deploying to Coolify..."

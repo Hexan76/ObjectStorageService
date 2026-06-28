@@ -126,4 +126,20 @@ deploy_coolify:
       curl -f -sS "$COOLIFY_WEBHOOK" \
         -H "Authorization: Bearer $COOLIFY_TOKEN"
 
-      echo "Deploy request sent to Coolify."
+      echo "Sending Discord notification..."
+
+      curl -sS \
+        -H "Content-Type: application/json" \
+        -X POST \
+        -d "{
+          \"content\": \"✅ Deployment completed
+
+      **Environment:** ${ENVIRONMENT}
+      **Project:** ${CI_PROJECT_NAME}
+      **Branch:** ${CI_COMMIT_BRANCH}
+      **Tag:** ${IMAGE_TAG}
+      **Pipeline:** ${CI_PIPELINE_URL}
+      **Commit:** ${CI_COMMIT_SHORT_SHA}
+      **By:** ${GITLAB_USER_NAME}\"
+        }" \
+        "$DISCORD_WEBHOOK"

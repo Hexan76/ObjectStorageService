@@ -128,28 +128,10 @@ deploy_coolify:
 
       echo "Sending Discord notification..."
 
-      PAYLOAD=$(jq -n \
-        --arg env "$ENVIRONMENT" \
-        --arg project "$CI_PROJECT_NAME" \
-        --arg branch "$CI_COMMIT_BRANCH" \
-        --arg tag "$IMAGE_TAG" \
-        --arg pipeline "$CI_PIPELINE_URL" \
-        --arg commit "$CI_COMMIT_SHORT_SHA" \
-        --arg user "$GITLAB_USER_NAME" \
-      '{
-        content:
-          "✅ Deployment completed\n\n" +
-          "**Environment:** \($env)\n" +
-          "**Project:** \($project)\n" +
-          "**Branch:** \($branch)\n" +
-          "**Tag:** \($tag)\n" +
-          "**Pipeline:** \($pipeline)\n" +
-          "**Commit:** \($commit)\n" +
-          "**By:** \($user)"
-      }')
+      DISCORD_URL="$(printf '%s' "$DISCORD_WEBHOOK" | tr -d '\r\n')"
 
       curl -sS \
         -H "Content-Type: application/json" \
         -X POST \
-        --data "$PAYLOAD" \
-        "$DISCORD_WEBHOOK"
+        --data "{\"content\":\"✅ Deployment completed\n\nEnvironment: ${ENVIRONMENT}\nProject: ${CI_PROJECT_NAME}\nBranch: ${CI_COMMIT_BRANCH}\nTag: ${IMAGE_TAG}\nCommit: ${CI_COMMIT_SHORT_SHA}\nPipeline: ${CI_PIPELINE_URL}\n\"}" \
+        "$DISCORD_URL"

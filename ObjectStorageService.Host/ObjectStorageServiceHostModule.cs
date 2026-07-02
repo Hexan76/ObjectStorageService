@@ -330,17 +330,19 @@ public class ObjectStorageServiceHostModule : AbpModule
 
     private void ConfigureCors(ServiceConfigurationContext context, IConfiguration configuration)
     {
+        var corsOrigins = configuration
+            .GetSection("App:CorsOrigins")
+            .Get<string[]>()
+            ?.Select(o => o.Trim().RemovePostFix("/"))
+            .ToArray()
+            ?? Array.Empty<string>();
+            
         context.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(builder =>
             {
                 builder
-                    .WithOrigins(
-                        configuration["App:CorsOrigins"]
-                            ?.Split(",", StringSplitOptions.RemoveEmptyEntries)
-                            .Select(o => o.Trim().RemovePostFix("/"))
-                            .ToArray() ?? Array.Empty<string>()
-                    )
+                    .WithOrigins(corsOrigins)
                     .WithAbpExposedHeaders()
                     .WithExposedHeaders("Content-Disposition", "Content-Type", "Content-Length")
                     .SetIsOriginAllowedToAllowWildcardSubdomains()

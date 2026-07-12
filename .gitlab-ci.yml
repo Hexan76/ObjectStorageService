@@ -8,10 +8,32 @@ default:
     - deploy
 
 variables:
-  IMAGE_TAG: "stage"
+  IMAGE_TAG: "stage-${CI_PIPELINE_IID}"
   BUILDING_BLOCK_BRANCH: "dev"
   DOCKER_BUILDKIT: "1"
   BUILDKIT_PROGRESS: "plain"
+
+workflow:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+      variables:
+        ENVIRONMENT: stage
+        IMAGE_TAG: stage-${CI_PIPELINE_IID}
+        BUILDING_BLOCK_BRANCH: dev
+        COOLIFY_WEBHOOK: $STAGE_COOLIFY_WEBHOOK
+        COOLIFY_TOKEN: $STAGE_COOLIFY_TOKEN
+
+    - if: '$CI_COMMIT_BRANCH == "prod"'
+      variables:
+        ENVIRONMENT: production
+        IMAGE_TAG: prod-${CI_PIPELINE_IID}
+        BUILDING_BLOCK_BRANCH: prod
+        COOLIFY_WEBHOOK: $PROD_COOLIFY_WEBHOOK
+        COOLIFY_TOKEN: $PROD_COOLIFY_TOKEN
+        
+.branch_rules: &branch_rules
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^(dev|prod)$/'
 
 before_script:
   - echo "Running on shell runner"
@@ -19,8 +41,7 @@ before_script:
 
 build_image:
   stage: build
-  only:
-    - stage
+  <<: *branch_rules
   script:
     - |
       set -e
@@ -51,13 +72,13 @@ build_image:
         --platform linux/arm64 \
         --provenance=false \
         -t "$CI_REGISTRY_IMAGE:$IMAGE_TAG" \
+        -t "$CI_REGISTRY_IMAGE:$ENVIRONMENT" \
         -f "$CI_PROJECT_DIR/.docker-context/object-storage-service/Dockerfile" \
         "$CI_PROJECT_DIR/.docker-context"
 
 push_image:
   stage: push
-  only:
-    - stage
+  <<: *branch_rules
   needs:
     - build_image
   script:
@@ -69,25 +90,48 @@ push_image:
 
       echo "Pushing docker image..."
       docker push "$CI_REGISTRY_IMAGE:$IMAGE_TAG"
-
+      docker push "$CI_REGISTRY_IMAGE:$ENVIRONMENT"
       echo "Image pushed successfully:"
-      echo "$CI_REGISTRY_IMAGE:$IMAGE_TAG"
-
+      echo "Environment : $ENVIRONMENT"
+      echo "Image       : $CI_REGISTRY_IMAGE:$IMAGE_TAG"
+      echo "Alias       : $CI_REGISTRY_IMAGE:$ENVIRONMENT"
 deploy_coolify:
   stage: deploy
-  only:
-    - stage
+  <<: *branch_rules
   needs:
     - push_image
   script:
     - |
       set -e
 
-      echo "Deploying to Coolify..."
+      echo "Changing Image Tag..."
+      echo "URL: ${COOLIFY_URL}/api/v1/applications/${COOLIFY_APPLICATION_ID}"
+      echo "IMAGE_TAG: ${IMAGE_TAG}"
+      echo "TOKEN LENGTH: ${#COOLIFY_TOKEN}"
 
+      curl -v \
+        --request PATCH \
+        "${COOLIFY_URL}/api/v1/applications/${COOLIFY_APPLICATION_ID}" \
+        -H "Authorization: Bearer ${COOLIFY_TOKEN}" \
+        -H "Content-Type: application/json" \
+        --data "{
+          \"docker_registry_image_tag\": \"${IMAGE_TAG}\"
+        }"
+
+      echo "Deploying to Coolify..."
+      echo "URL=[$COOLIFY_WEBHOOK]"
+      echo "TOKEN=[$COOLIFY_TOKEN]"
       COOLIFY_DEPLOY_URL="$(printf '%s' "$COOLIFY_WEBHOOK" | tr -d '\r\n')"
 
       curl -f -sS "$COOLIFY_WEBHOOK" \
         -H "Authorization: Bearer $COOLIFY_TOKEN"
 
-      echo "Deploy request sent to Coolify."
+      echo "Sending Discord notification..."
+
+      DISCORD_URL="$(printf '%s' "$DISCORD_WEBHOOK" | tr -d '\r\n')"
+
+      curl -sS \
+        -H "Content-Type: application/json" \
+        -X POST \
+        --data "{\"content\":\"✅ Deployment completed\n\nEnvironment: ${ENVIRONMENT}\nProject: ${CI_PROJECT_NAME}\nBranch: ${CI_COMMIT_BRANCH}\nTag: ${IMAGE_TAG}\nCommit: ${CI_COMMIT_SHORT_SHA}\nPipeline: ${CI_PIPELINE_URL}\n\"}" \
+        "$DISCORD_URL"

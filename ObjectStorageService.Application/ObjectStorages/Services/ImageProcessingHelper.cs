@@ -37,7 +37,11 @@ public class ImageProcessingHelper : IImageProcessingHelper, IScopedDependency
         }
     }
 
-    public async Task<(MemoryStream Stream, IImageFormat Format)> ResizeAsync(Stream input, int width, int height, CancellationToken ct)
+    public async Task<(MemoryStream Stream, IImageFormat Format)> ResizeAsync(
+        Stream input,
+        int width,
+        int height,
+        CancellationToken ct)
     {
         if (input.CanSeek)
             input.Position = 0;
@@ -47,8 +51,8 @@ public class ImageProcessingHelper : IImageProcessingHelper, IScopedDependency
 
         if (_isCompress)
         {
-
             var resultCompress = await CompressToWebp(input, width * height, ct);
+
             workingStream = resultCompress.Stream;
             format = MimeToExtension(_compressMimeType);
         }
@@ -57,7 +61,24 @@ public class ImageProcessingHelper : IImageProcessingHelper, IScopedDependency
             workingStream.Position = 0;
 
         using var image = await Image.LoadAsync(workingStream, ct);
+
         format ??= image.Metadata.DecodedImageFormat;
+
+        // اگر تصویر از سایز مورد نظر کوچک‌تر یا برابر است، Resize نکن
+        if (image.Width <= width && image.Height <= height)
+        {
+            var originalStream = new MemoryStream();
+
+            await SaveWithOriginalFormat(
+                image,
+                originalStream,
+                format,
+                quality: 90);
+
+            originalStream.Position = 0;
+
+            return (originalStream, format);
+        }
 
         image.Mutate(x =>
         {
@@ -69,8 +90,15 @@ public class ImageProcessingHelper : IImageProcessingHelper, IScopedDependency
         });
 
         var outStream = new MemoryStream();
-        await SaveWithOriginalFormat(image, outStream, format, quality: 90);
+
+        await SaveWithOriginalFormat(
+            image,
+            outStream,
+            format,
+            quality: 90);
+
         outStream.Position = 0;
+
         return (outStream, format);
     }
     public async Task<(MemoryStream Stream, IImageFormat Format)> Thumbnail(

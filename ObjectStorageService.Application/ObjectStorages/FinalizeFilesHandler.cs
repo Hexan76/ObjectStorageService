@@ -72,7 +72,7 @@ public class FinalizeFilesHandler(
                     originalKey,
                     tempKey,
                     cancellationToken));
-            //await _minioHelper.CopyObjectAsync(_bucket, originalKey, tempKey, cancellationToken);
+
             variants.Add(ToVariant("original", originalKey));
 
 
@@ -92,7 +92,6 @@ public class FinalizeFilesHandler(
                             _imageHelper.GetContentType(compressedLoaded.Format),
                             cancellationToken));
 
-                //await _minioHelper.PutObjectAsync(_bucket, compressedKey, compressedLoaded.Stream, _imageHelper.GetContentType(compressedLoaded.Format), cancellationToken);
 
                 variants.Add(ToVariant("compressed", compressedKey));
 
@@ -113,7 +112,6 @@ public class FinalizeFilesHandler(
                                 _imageHelper.GetContentType(format),
                                 cancellationToken));
 
-                    //await _minioHelper.PutObjectAsync(_bucket, thumbKey, outStream, _imageHelper.GetContentType(format), cancellationToken);
 
                     variants.Add(ToVariant("thumbnail", thumbKey));
                 }
@@ -143,7 +141,6 @@ public class FinalizeFilesHandler(
                             _imageHelper.GetContentType(format),
                             cancellationToken));
 
-                    //await _minioHelper.PutObjectAsync(_bucket, key, outStream, _imageHelper.GetContentType(format), cancellationToken);
 
                     variants.Add(ToVariant(size.ToString().ToLower(), key));
                 }
@@ -165,8 +162,6 @@ public class FinalizeFilesHandler(
                             outStream,
                             _imageHelper.GetContentType(format),
                             cancellationToken));
-
-                    //await _minioHelper.PutObjectAsync(_bucket, wmKey, outStream, _imageHelper.GetContentType(format), cancellationToken);
 
                     variants.Add(ToVariant("watermark", wmKey));
                 }

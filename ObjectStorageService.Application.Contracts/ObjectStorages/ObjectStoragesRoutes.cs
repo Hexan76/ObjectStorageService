@@ -8,7 +8,9 @@ public class ObjectStoragesRoutes : BaseRoutes
     {
         Temp = $"{Default}/temp";
         Finalize = $"{Default}/finalize";
+        Promote = $"{Default}/promote";
     }
     public readonly string Temp;
     public readonly string Finalize;
+    public readonly string Promote;
 }

@@ -1,12 +1,9 @@
 ﻿using Framework.BuildingBlock.Application.Contracts;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using ObjectStorageService;
 using ObjectStorageService.Domain;
 using ObjectStorageService.ObjectStorages;
 using ObjectStorageService.ObjectStorages.Services;
-using OpenTelemetry.Resources;
-using SkiaSharp;
 using Volo.Abp.Caching;
 
 public class FinalizeFilesHandler(
@@ -36,8 +33,8 @@ public class FinalizeFilesHandler(
             // ---------------------------
             // METADATA
             // ---------------------------
-            var mimeType = await _minioHelper.StatObjectContentTypeAsync(_bucket, tempKey, cancellationToken);
-            var extension = MimeToExtension(mimeType);
+            var stat = await _minioHelper.StatObjectAsync(_bucket, tempKey, cancellationToken);
+            var extension = MimeToExtension(stat.ContentType);
 
 
             var domain = ResolveDomainByExtension(extension);

@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Options;
 using Minio;
+using Minio.DataModel;
 using Minio.DataModel.Args;
-using Minio.DataModel.Response;
 using Volo.Abp.DependencyInjection;
 
 namespace ObjectStorageService.ObjectStorages.Services;
@@ -30,25 +30,7 @@ public class MinioProcessingHelper : IMinioProcessingHelper, IScopedDependency
         }).CreateClient();
     }
 
-    public async Task<string> StatObjectContentTypeAsync(string bucket, string objectName, CancellationToken ct)
-    {
-        var stat = await _client.StatObjectAsync(new StatObjectArgs().WithBucket(bucket).WithObject(objectName), ct);
-        // StatObjectResponse may expose ContentType; use its public property if available
-        try
-        {
-            var prop = stat.GetType().GetProperty("ContentType");
-            if (prop != null)
-            {
-                var val = prop.GetValue(stat) as string;
-                if (!string.IsNullOrEmpty(val)) return val;
-            }
-        }
-        catch { }
-
-        return string.Empty;
-    }
-
-    public async Task<Dictionary<string,string>> GetObjectTagsAsync(string bucket, string objectName, CancellationToken ct)
+    public async Task<Dictionary<string, string>> GetObjectTagsAsync(string bucket, string objectName, CancellationToken ct)
     {
         var tagsObj = await _client.GetObjectTagsAsync(new GetObjectTagsArgs().WithBucket(bucket).WithObject(objectName), ct);
 
@@ -120,4 +102,7 @@ public class MinioProcessingHelper : IMinioProcessingHelper, IScopedDependency
 
     public Task RemoveObjectAsync(string bucket, string objectName, CancellationToken ct)
         => _client.RemoveObjectAsync(new RemoveObjectArgs().WithBucket(bucket).WithObject(objectName), ct);
+
+    public Task<ObjectStat> StatObjectAsync(string bucket, string objectName, CancellationToken ct)
+        => _client.StatObjectAsync(new StatObjectArgs().WithBucket(bucket).WithObject(objectName), ct);
 }

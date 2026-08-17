@@ -3,7 +3,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <MicrosoftVersion>10.0.7</MicrosoftVersion>
+    <MicrosoftVersion>10.0.9</MicrosoftVersion>
     <AbpVersion>10.3.0</AbpVersion>
   </PropertyGroup>
   <ItemGroup>

@@ -25,6 +25,7 @@ workflow:
         COOLIFY_TOKEN: $COOLIFY_TOKEN_STAGE
         COOLIFY_APPLICATION_ID: $COOLIFY_APPLICATION_ID_STAGE
         COOLIFY_URL: $COOLIFY_URL_STAGE
+        DOCKER_PLATFORM: $DOCKER_PLATFORM_STAGE
 
     - if: '$CI_COMMIT_BRANCH == "prod"'
       variables:
@@ -35,6 +36,7 @@ workflow:
         COOLIFY_TOKEN: $COOLIFY_TOKEN_PROD
         COOLIFY_APPLICATION_ID: $COOLIFY_APPLICATION_ID_PROD
         COOLIFY_URL: $COOLIFY_URL_PROD
+        DOCKER_PLATFORM: $DOCKER_PLATFORM_PROD
         
 .branch_rules: &branch_rules
   rules:
@@ -74,7 +76,7 @@ build_image:
 
       echo "Building docker image..."
       docker build \
-        --platform linux/arm64 \
+        --platform "$DOCKER_PLATFORM" \
         --provenance=false \
         -t "$CI_REGISTRY_IMAGE:$IMAGE_TAG" \
         -t "$CI_REGISTRY_IMAGE:$ENVIRONMENT" \

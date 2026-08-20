@@ -28,6 +28,14 @@ public class FinalizeFilesHandler(
         {
             _bucket = StorageAppMapping.GetStorageAppType(file.AppType, _environment);
             var tempObject = await distributedCache.GetAsync(file.Id.ToString());
+            if (tempObject is null)
+            {
+                result.Files.Add(new FinalizeItemResponse
+                {
+                    FileName = "The key/Id not Found in temp Path"
+                });
+                continue;
+            }
             var tempKey = tempObject.ObjectKey;
 
             // ---------------------------

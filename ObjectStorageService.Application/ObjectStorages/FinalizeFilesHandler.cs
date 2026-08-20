@@ -27,12 +27,13 @@ public class FinalizeFilesHandler(
         foreach (var file in request.Files)
         {
             _bucket = StorageAppMapping.GetStorageAppType(file.AppType, _environment);
-            var tempObject = await distributedCache.GetAsync(file.Id.ToString());
+            var id = file.Id.ToString();
+            var tempObject = await distributedCache.GetAsync(id);
             if (tempObject is null)
             {
                 result.Files.Add(new FinalizeItemResponse
                 {
-                    FileName = "The key/Id not Found in temp Path"
+                    FileName = $"The key/Id {id} not Found in temp Path"
                 });
                 continue;
             }

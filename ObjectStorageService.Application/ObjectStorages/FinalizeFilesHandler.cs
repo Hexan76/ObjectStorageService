@@ -24,7 +24,8 @@ public class FinalizeFilesHandler(
         var result = new FinalizeFilesResponse();
 
         var uploadTasks = new List<Task>();
-        var removeTasks = new List<Task>();
+        var removeActions = new List<Func<Task>>();
+
         foreach (var file in request.Files)
         {
             _bucket = StorageAppMapping.GetStorageAppType(file.AppType, _environment);
@@ -180,8 +181,8 @@ public class FinalizeFilesHandler(
             // ---------------------------
             if (request.IsTransaction is true)
             {
-                removeTasks.Add(_minioHelper.RemoveObjectAsync(_bucket, tempKey, cancellationToken));
-                removeTasks.Add(distributedCache.RemoveAsync(file.Id.ToString()));
+                removeActions.Add(()=> _minioHelper.RemoveObjectAsync(_bucket, tempKey, cancellationToken));
+                removeActions.Add(()=> distributedCache.RemoveAsync(file.Id.ToString()));
             }
 
             result.Files.Add(new FinalizeItemResponse
@@ -203,7 +204,11 @@ public class FinalizeFilesHandler(
         }
 
         await Task.WhenAll(uploadTasks);
-        await Task.WhenAll(removeTasks);
+        var removeTasks = removeActions
+                .Select(x => x())
+                .ToList();
+
+            await Task.WhenAll(removeTasks);
         return new AcceptMessage<FinalizeFilesResponse>
         {
             Result = result
@@ -222,7 +227,7 @@ public class FinalizeFilesHandler(
     private static string ResolveDomainByExtension(string extension)
         => extension.ToLower() switch
         {
-            "jpg" or "jpeg" or "png" or "webp" or "gif" or "bmp" => "media",
+            "jpg" or "jpeg" or "png" or "webp" or "gif" or "bmp" or "tiff" or "tif" or "svg" or "avif" or "heic" or "heif" => "media",
             "pdf" or "doc" or "docx" or "xls" or "xlsx" => "docs",
             _ => "obj"
         };

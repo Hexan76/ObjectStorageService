@@ -24,6 +24,7 @@ public class FinalizeFilesHandler(
         var result = new FinalizeFilesResponse();
 
         var uploadTasks = new List<Task>();
+        var removeTasks = new List<Task>();
         foreach (var file in request.Files)
         {
             _bucket = StorageAppMapping.GetStorageAppType(file.AppType, _environment);
@@ -178,14 +179,10 @@ public class FinalizeFilesHandler(
             // DELETE TEMP
             // ---------------------------
             if (request.IsTransaction is true)
-                await _minioHelper.RemoveObjectAsync(_bucket, tempKey, cancellationToken);
-
-            // ---------------------------
-            // RESPONSE
-            // ---------------------------
-
-            if (request.IsTransaction is true)
-                await distributedCache.RemoveAsync(file.Id.ToString());
+            {
+                removeTasks.Add(_minioHelper.RemoveObjectAsync(_bucket, tempKey, cancellationToken));
+                removeTasks.Add(distributedCache.RemoveAsync(file.Id.ToString()));
+            }
 
             result.Files.Add(new FinalizeItemResponse
             {
@@ -206,6 +203,7 @@ public class FinalizeFilesHandler(
         }
 
         await Task.WhenAll(uploadTasks);
+        await Task.WhenAll(removeTasks);
         return new AcceptMessage<FinalizeFilesResponse>
         {
             Result = result

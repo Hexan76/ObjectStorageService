@@ -222,7 +222,7 @@ public class FinalizeFilesHandler(
     private static string ResolveDomainByExtension(string extension)
         => extension.ToLower() switch
         {
-            "jpg" or "jpeg" or "png" or "webp" or "gif" or "bmp" => "media",
+            "jpg" or "jpeg" or "png" or "webp" or "gif" or "bmp" or "tiff" or "tif" or "svg" or "avif" or "heic" or "heif" => "media",
             "pdf" or "doc" or "docx" or "xls" or "xlsx" => "docs",
             _ => "obj"
         };

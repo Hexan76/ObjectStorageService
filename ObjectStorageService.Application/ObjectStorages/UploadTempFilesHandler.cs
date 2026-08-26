@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
+using MimeDetective;
+using MimeDetective.Definitions;
 using Minio;
 using Minio.DataModel.Args;
 using Minio.DataModel.Response;
@@ -14,7 +16,7 @@ namespace ObjectStorageService.ObjectStorages;
 public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDistributedCache<ObjectTempCache> distributedCache)
     : IUploadTempFilesRequestHandler
 {
-    private  string _destinationBucket = options.Value.BucketDestination;
+    private string _destinationBucket = options.Value.BucketDestination;
     private readonly string _environment = options.Value.Environment;
     private readonly string _baseUrl = options.Value.PublicBaseUrl;
     private readonly IMinioClient _client = new MinioClientFactory(cfg =>
@@ -24,11 +26,16 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
            .WithSSL(options.Value.DestinationSSL)
            .Build();
     }).CreateClient();
+
+    private static readonly IContentInspector Inspector =
+    new ContentInspectorBuilder
+    {
+        Definitions = DefaultDefinitions.All()
+    }.Build();
     public async Task<MessageContract<UploadTempFilesResponse>> Handle(
         UploadTempFilesRequest request,
         CancellationToken cancellationToken)
     {
-
         var result = new UploadTempFilesResponse
         {
             Files = []
@@ -45,7 +52,51 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
 
             await using var stream = file.OpenReadStream();
 
+
+            var results = Inspector.Inspect(stream);
+
+            var detected = results.FirstOrDefault();
+
+
+            if (detected is null)
+                {
+                    result.Files.Add(new TempFileModel
+                    {
+                        Id = id,
+                        Name = $"Unable to determine file type for '{file.FileName}'.",
+                        MimeType = file.ContentType,
+                        Size = (int)file.Length,
+                        Link = null
+                    });
+
+                    continue;
+                }
+            var detectedMimeType = detected.Definition.File.MimeType;
+            var detectedExtensions = detected.Definition.File.Extensions;
+
+            var requestedExtension = Path
+                .GetExtension(file.FileName)
+                .TrimStart('.')
+                .ToLowerInvariant();
+
+            if (!detectedExtensions.Any(x =>
+                    string.Equals(x, requestedExtension, StringComparison.OrdinalIgnoreCase)))
+            {
+                result.Files.Add(new TempFileModel
+                {
+                    Id = id,
+                    Name = $"File content does not match extension '.{requestedExtension}'.",
+                    MimeType = file.ContentType,
+                    Size = (int)file.Length,
+                    Link = null
+                });
+
+                continue;
+            }
+            await using var streamChecked = file.OpenReadStream();
+
             PutObjectResponse response = null;
+
             try
             {
                 var tags = new Dictionary<string, string>()
@@ -59,7 +110,7 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
                         .WithBucket(_destinationBucket)
                         .WithObject(objectName)
                         .WithTagging(new Minio.DataModel.Tags.Tagging(tags, true))
-                        .WithStreamData(stream)
+                        .WithStreamData(streamChecked)
                         .WithObjectSize(file.Length)
                         .WithContentType(file.ContentType),
                     cancellationToken);
@@ -97,7 +148,7 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
 
 
         return MessageContract<UploadTempFilesResponse>.Success(result);
-        
+
     }
 
     private static string NormalizeTag(string value)

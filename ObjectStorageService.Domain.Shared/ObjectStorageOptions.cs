@@ -20,6 +20,8 @@ public class ObjectStorageOptions
     public string PublicBaseUrl { get; set; } = default!;
     public bool IsCompressWebp { get; set; } = true;
     public string CompressMimeType { get; set; } = "image/webp";
+    public int DefaultCompressionTargetSize { get; set; } = 50 * 1024;
+    public int ThumbnailTargetSize { get; set; } = 10 * 1024;
     public TimeSpan ExpirationTime { get; set; } = TimeSpan.FromDays(1);
 
 }

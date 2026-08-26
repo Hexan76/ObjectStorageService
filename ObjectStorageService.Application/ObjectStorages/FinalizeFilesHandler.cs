@@ -7,7 +7,7 @@ using ObjectStorageService.ObjectStorages.Services;
 using Volo.Abp.Caching;
 
 public class FinalizeFilesHandler(
-    IImageProcessingHelper _imageHelper,
+    INetImageProcessingHelper _imageHelper,
     IMinioProcessingHelper _minioHelper,
     IDistributedCache<ObjectTempCache> distributedCache,
     IOptions<ObjectStorageOptions> options) : IFinalizeFilesRequestHandler
@@ -56,9 +56,6 @@ public class FinalizeFilesHandler(
 
             var src = await _minioHelper.GetObjectAsStreamAsync(_bucket, tempKey, cancellationToken);
 
-
-
-
             // ---------------------------
             // ORIGINAL
             // ---------------------------
@@ -86,94 +83,96 @@ public class FinalizeFilesHandler(
 
             if ("media" == domain)
             {
-                // ---------------------------
-                // Compressed
-                // ---------------------------
-                var compressedKey = GetStorageKeyFileName(basePath, fileName, "webp");
-
-                var compressedLoaded = await _imageHelper.CompressToWebp(src, 50 * 1024, cancellationToken);
-                uploadTasks.Add(
-                        _minioHelper.PutObjectAsync(
-                            _bucket,
-                            compressedKey,
-                            compressedLoaded.Stream,
-                            _imageHelper.GetContentType(compressedLoaded.Format),
-                            cancellationToken));
-
-
-                variants.Add(ToVariant("compressed", compressedKey));
-
-                // ---------------------------
-                // THUMBNAIL
-                // ---------------------------
-                if (file.GenerateThumbnail)
+                if (IsRasterImage(extension))
                 {
-                    var (outStream, format) = await _imageHelper.Thumbnail(src, 300, 300, cancellationToken);
+                    // ---------------------------
+                    // Compressed
+                    // ---------------------------
+                    var compressedKey = GetStorageKeyFileName(basePath, fileName, "webp");
 
-                    var thumbKey = GetStorageKeyFileName(basePath, $"{fileName}_thumbnail", format.FileExtensions.First());
-
+                    var compressedLoaded = await _imageHelper.CompressToWebp(src, 50 * 1024, cancellationToken);
                     uploadTasks.Add(
                             _minioHelper.PutObjectAsync(
                                 _bucket,
-                                thumbKey,
+                                compressedKey,
+                                compressedLoaded.Stream,
+                                _imageHelper.GetContentType(compressedLoaded.Format),
+                                cancellationToken));
+
+
+                    variants.Add(ToVariant("compressed", compressedKey));
+
+                    // ---------------------------
+                    // THUMBNAIL
+                    // ---------------------------
+                    if (file.GenerateThumbnail)
+                    {
+                        var (outStream, format) = await _imageHelper.Thumbnail(src, 300, 300, cancellationToken);
+
+                        var thumbKey = GetStorageKeyFileName(basePath, $"{fileName}_thumbnail", format.Extension);
+
+                        uploadTasks.Add(
+                                _minioHelper.PutObjectAsync(
+                                    _bucket,
+                                    thumbKey,
+                                    outStream,
+                                    _imageHelper.GetContentType(format),
+                                    cancellationToken));
+
+
+                        variants.Add(ToVariant("thumbnail", thumbKey));
+                    }
+
+                    // ---------------------------
+                    // SIZES
+                    // ---------------------------
+                    foreach (var size in file.Sizes)
+                    {
+                        var (w, h) = size switch
+                        {
+                            ImageSize.Small => (300, 300),
+                            ImageSize.Medium => (800, 800),
+                            ImageSize.Large => (1600, 1600),
+                            _ => (800, 800)
+                        };
+
+
+                        var (outStream, format) = await _imageHelper.ResizeAsync(src, w, h, cancellationToken);
+                        var key = GetStorageKeyFileName(basePath, $"{fileName}_{size.ToString().ToLower()}", format.Extension);
+
+                        uploadTasks.Add(
+                            _minioHelper.PutObjectAsync(
+                                _bucket,
+                                key,
                                 outStream,
                                 _imageHelper.GetContentType(format),
                                 cancellationToken));
 
 
-                    variants.Add(ToVariant("thumbnail", thumbKey));
-                }
+                        variants.Add(ToVariant(size.ToString().ToLower(), key));
+                    }
 
-                // ---------------------------
-                // SIZES
-                // ---------------------------
-                foreach (var size in file.Sizes)
-                {
-                    var (w, h) = size switch
+                    // ---------------------------
+                    // WATERMARK
+                    // ---------------------------
+                    if (file.Watermark)
                     {
-                        ImageSize.Small => (300, 300),
-                        ImageSize.Medium => (800, 800),
-                        ImageSize.Large => (1600, 1600),
-                        _ => (800, 800)
-                    };
+                        var (outStream, format) = await _imageHelper.ApplyWatermarkAsync(src, cancellationToken);
+
+                        var wmKey = GetStorageKeyFileName(basePath, $"{fileName}_watermark", format.Extension);
 
 
-                    var (outStream, format) = await _imageHelper.ResizeAsync(src, w, h, cancellationToken);
-                    var key = GetStorageKeyFileName(basePath, $"{fileName}_{size.ToString().ToLower()}", format.FileExtensions.First());
+                        uploadTasks.Add(
+                            _minioHelper.PutObjectAsync(
+                                _bucket,
+                                wmKey,
+                                outStream,
+                                _imageHelper.GetContentType(format),
+                                cancellationToken));
 
-                    uploadTasks.Add(
-                        _minioHelper.PutObjectAsync(
-                            _bucket,
-                            key,
-                            outStream,
-                            _imageHelper.GetContentType(format),
-                            cancellationToken));
-
-
-                    variants.Add(ToVariant(size.ToString().ToLower(), key));
+                        variants.Add(ToVariant("watermark", wmKey));
+                    }
                 }
-
-                // ---------------------------
-                // WATERMARK
-                // ---------------------------
-                if (file.Watermark)
-                {
-                    var (outStream, format) = await _imageHelper.ApplyWatermarkAsync(src, cancellationToken);
-
-                    var wmKey = GetStorageKeyFileName(basePath, $"{fileName}_watermark", format.FileExtensions.First());
-
-
-                    uploadTasks.Add(
-                        _minioHelper.PutObjectAsync(
-                            _bucket,
-                            wmKey,
-                            outStream,
-                            _imageHelper.GetContentType(format),
-                            cancellationToken));
-
-                    variants.Add(ToVariant("watermark", wmKey));
-                }
-
             }
 
             // ---------------------------
@@ -181,8 +180,8 @@ public class FinalizeFilesHandler(
             // ---------------------------
             if (request.IsTransaction is true)
             {
-                removeActions.Add(()=> _minioHelper.RemoveObjectAsync(_bucket, tempKey, cancellationToken));
-                removeActions.Add(()=> distributedCache.RemoveAsync(file.Id.ToString()));
+                removeActions.Add(() => _minioHelper.RemoveObjectAsync(_bucket, tempKey, cancellationToken));
+                removeActions.Add(() => distributedCache.RemoveAsync(file.Id.ToString()));
             }
 
             result.Files.Add(new FinalizeItemResponse
@@ -208,7 +207,7 @@ public class FinalizeFilesHandler(
                 .Select(x => x())
                 .ToList();
 
-            await Task.WhenAll(removeTasks);
+        await Task.WhenAll(removeTasks);
         return new AcceptMessage<FinalizeFilesResponse>
         {
             Result = result
@@ -231,6 +230,19 @@ public class FinalizeFilesHandler(
             "pdf" or "doc" or "docx" or "xls" or "xlsx" => "docs",
             _ => "obj"
         };
+    private static bool IsRasterImage(string extension)
+        => extension is
+                "jpg" or
+                "jpeg" or
+                "png" or
+                "webp" or
+                "gif" or
+                "bmp" or
+                "tiff" or
+                "tif" or
+                "avif" or
+                "heic" or
+                "heif";
 
     private static string MimeToExtension(string mime)
         => mime?.ToLowerInvariant() switch

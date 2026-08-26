@@ -8,6 +8,8 @@
 		<PackageReference Include="MediatR" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
 		<PackageReference Include="Minio" />
+		<PackageReference Include="NetVips" />
+		<PackageReference Include="NetVips.Native" />
 		<PackageReference Include="SixLabors.ImageSharp" />
 		<PackageReference Include="SixLabors.ImageSharp.Drawing" />
 		<PackageReference Include="Svg.Skia" />

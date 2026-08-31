@@ -36,23 +36,33 @@ public sealed class NetVipsImageProcessingHelper : INetImageProcessingHelper, ID
         }
     }
 
-    public async Task<(MemoryStream Stream, ImageFormat Format)> ResizeAsync(Stream input, int width, int height, CancellationToken ct = default)
+    public async Task<(MemoryStream Stream, ImageFormat Format)> ResizeAsync(
+        Stream input,
+        int width,
+        int height,
+        CancellationToken ct = default)
     {
         ValidateSize(width, height);
         ct.ThrowIfCancellationRequested();
 
+        using var image = await LoadAsync(input, ct);
+        using var oriented = image.Autorot();
+
+        var resized = ResizeIfNeeded(oriented, width, height);
+
         if (_isCompress)
         {
-            var compressed = await CompressToWebp(input, _defaultCompressionTargetSize, ct);
-            using var compressedImage = Load(compressed.Stream);
-            var resized = ResizeIfNeeded(compressedImage, width, height);
-            return await WriteAsync(resized, ImageFormat.FromMimeType(_compressMimeType), 90, ct);
+            using (resized)
+            {
+                return await CompressImageToWebpAsync(resized, _defaultCompressionTargetSize, ct);
+            }
         }
 
-        using var image = Load(input);
-        var format = DetectFormat(image);
-        var resizedImage = ResizeIfNeeded(image, width, height);
-        return await WriteAsync(resizedImage, format, 90, ct);
+        using (resized)
+        {
+            var format = DetectFormat(image);
+            return await WriteAsync(resized, format, 90, ct);
+        }
     }
 
     public async Task<(MemoryStream Stream, ImageFormat Format)> Thumbnail(Stream input, int width, int height, CancellationToken ct = default)
@@ -95,8 +105,7 @@ public sealed class NetVipsImageProcessingHelper : INetImageProcessingHelper, ID
                 }
             }
             using var smaller = oriented.Resize(scale, Enums.Kernel.Lanczos3);
-            //using var smaller = resized.Resize(0.92, kwargs: new VOption { { "kernel", Enums.Kernel.Lanczos3 } });
-            var smallerBytes = smaller.WriteToBuffer(".webp[Q=12,smart_subsample=true,strip=true]");
+            var smallerBytes = smaller.WriteToBuffer(".webp[Q=12,smart_subsample=tsrue,strip=true]");
             var smallerStream = new MemoryStream(smallerBytes, writable: false);
 
             if (best is null || smallerStream.Length < best.Length)
@@ -137,17 +146,27 @@ public sealed class NetVipsImageProcessingHelper : INetImageProcessingHelper, ID
         return await WriteAsync(result, format, 90, ct);
     }
 
-    public async Task<(MemoryStream Stream, ImageFormat Format)> CompressToWebp(Stream input, int targetSize = DefaultTargetSize, CancellationToken ct = default)
+    public async Task<(MemoryStream Stream, ImageFormat Format)> CompressToWebp(
+        Stream input,
+        int targetSize = DefaultTargetSize,
+        CancellationToken ct = default)
     {
         if (targetSize <= 0)
             targetSize = _defaultCompressionTargetSize;
 
         ct.ThrowIfCancellationRequested();
-        using var image = Load(input);
+
+        await using var source = new MemoryStream();
+
+        await input.CopyToAsync(source, ct);
+
+        source.Position = 0;
+        using var image = await LoadAsync(input, ct);
         using var oriented = image.Autorot();
         using var current = ShrinkIfNeeded(oriented, targetSize);
 
         MemoryStream? best = null;
+
         var qualities = new[] { 80, 65, 50, 35, 25 };
 
         try
@@ -155,7 +174,10 @@ public sealed class NetVipsImageProcessingHelper : INetImageProcessingHelper, ID
             foreach (var quality in qualities)
             {
                 ct.ThrowIfCancellationRequested();
-                var bytes = current.WriteToBuffer($".webp[Q={quality},smart_subsample=true]");
+
+                var bytes = current.WriteToBuffer(
+                    $".webp[Q={quality},smart_subsample=true]");
+
                 var candidate = new MemoryStream(bytes, writable: false);
 
                 if (best is null || candidate.Length < best.Length)
@@ -184,7 +206,57 @@ public sealed class NetVipsImageProcessingHelper : INetImageProcessingHelper, ID
             throw;
         }
     }
+    private static Task<(MemoryStream Stream, ImageFormat Format)> CompressImageToWebpAsync(
+    Image image,
+    int targetSize,
+    CancellationToken ct)
+    {
+        var qualities = new[] { 80, 65, 50, 35, 25 };
 
+        MemoryStream? best = null;
+
+        try
+        {
+            foreach (var quality in qualities)
+            {
+                ct.ThrowIfCancellationRequested();
+
+                var bytes = image.WriteToBuffer(
+                    $".webp[Q={quality},smart_subsample=true,strip=true]");
+
+                var candidate = new MemoryStream(
+                    bytes,
+                    writable: false);
+
+                if (best is null || candidate.Length < best.Length)
+                {
+                    best?.Dispose();
+                    best = candidate;
+                }
+                else
+                {
+                    candidate.Dispose();
+                }
+
+                if (best.Length <= targetSize)
+                {
+                    best.Position = 0;
+                    return Task.FromResult(
+                        (best, ImageFormat.Webp));
+                }
+            }
+
+            best!.Position = 0;
+
+            return Task.FromResult(
+                (best, ImageFormat.Webp));
+        }
+        catch
+        {
+            best?.Dispose();
+            throw;
+        }
+    }
     public async Task<(MemoryStream Stream, ImageFormat Format)> LoadOrginal(Stream input, CancellationToken ct = default)
     {
         ct.ThrowIfCancellationRequested();
@@ -202,11 +274,31 @@ public sealed class NetVipsImageProcessingHelper : INetImageProcessingHelper, ID
 
         using var buffer = new MemoryStream();
         input.CopyTo(buffer);
-        return Image.NewFromBuffer(buffer.ToArray(), kwargs: new VOption
-        {
-            { "access", Enums.Access.Sequential },
-            { "fail", true }
-        });
+
+        var bytes = buffer.ToArray();
+
+        if (bytes.Length == 0)
+            throw new InvalidOperationException("Input image stream is empty.");
+
+        return Image.NewFromBuffer(bytes);
+    }
+    private static async Task<Image> LoadAsync(
+    Stream input,
+    CancellationToken ct)
+    {
+        if (input.CanSeek)
+            input.Position = 0;
+
+        using var buffer = new MemoryStream();
+
+        await input.CopyToAsync(buffer, ct);
+
+        var bytes = buffer.ToArray();
+
+        if (bytes.Length == 0)
+            throw new InvalidOperationException("Input image stream is empty.");
+
+        return Image.NewFromBuffer(bytes);
     }
 
     private static async Task<byte[]> ReadBytesAsync(Stream input, CancellationToken ct)

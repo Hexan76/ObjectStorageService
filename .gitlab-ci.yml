@@ -97,7 +97,7 @@ push_image:
 
       echo "Pushing docker image..."
       docker push "$CI_REGISTRY_IMAGE:$IMAGE_TAG"
-      docker push "$CI_REGISTRY_IMAGE:$ENVIRONMENT"
+      # docker push "$CI_REGISTRY_IMAGE:$ENVIRONMENT"
       echo "Image pushed successfully:"
       echo "Environment : $ENVIRONMENT"
       echo "Image       : $CI_REGISTRY_IMAGE:$IMAGE_TAG"

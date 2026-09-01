@@ -30,7 +30,10 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
     private static readonly IContentInspector Inspector =
     new ContentInspectorBuilder
     {
-        Definitions = DefaultDefinitions.All()
+        Definitions = DefaultDefinitions
+        .All()
+        .ToList()
+
     }.Build();
     public async Task<MessageContract<UploadTempFilesResponse>> Handle(
         UploadTempFilesRequest request,
@@ -59,18 +62,18 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
 
 
             if (detected is null)
+            {
+                result.Files.Add(new TempFileModel
                 {
-                    result.Files.Add(new TempFileModel
-                    {
-                        Id = id,
-                        Name = $"Unable to determine file type for '{file.FileName}'.",
-                        MimeType = file.ContentType,
-                        Size = (int)file.Length,
-                        Link = null
-                    });
+                    Id = id,
+                    Name = $"Unable to determine file type for '{file.FileName}'.",
+                    MimeType = file.ContentType,
+                    Size = (int)file.Length,
+                    Link = null
+                });
 
-                    continue;
-                }
+                continue;
+            }
             var detectedMimeType = detected.Definition.File.MimeType;
             var detectedExtensions = detected.Definition.File.Extensions;
 
@@ -80,7 +83,7 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
                 .ToLowerInvariant();
 
             if (!detectedExtensions.Any(x =>
-                    string.Equals(x, requestedExtension, StringComparison.OrdinalIgnoreCase)))
+                    string.Equals(x, requestedExtension, StringComparison.OrdinalIgnoreCase)) && file.ContentType!= "image/svg+xml")
             {
                 result.Files.Add(new TempFileModel
                 {

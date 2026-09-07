@@ -94,7 +94,7 @@ public class FinalizeFilesHandler(
                         // ---------------------------
                         // Compressed
                         // ---------------------------
-                        var compressedKey = GetStorageKeyFileName(basePath, fileName, "webp");
+                        var compressedKey = GetStorageKeyFileName(basePath, $"{fileName}_compressed", "webp");
 
                         var compressedLoaded = await _imageHelper.CompressToWebp(src, 50 * 1024, cancellationToken);
                         fileUploadTasks.Add(

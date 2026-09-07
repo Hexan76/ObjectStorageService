@@ -1,19 +1,21 @@
 ﻿using Framework.BuildingBlock.Application.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
-using MimeDetective;
-using MimeDetective.Definitions;
 using Minio;
 using Minio.DataModel.Args;
-using Minio.DataModel.Response;
 using ObjectStorageService.Domain;
 using System.Text.RegularExpressions;
+using Template.Service.Domain.Shared;
 using Volo.Abp.Caching;
 
 namespace ObjectStorageService.ObjectStorages;
 
-public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDistributedCache<ObjectTempCache> distributedCache)
+public class UploadTempFilesHandler(
+    IOptions<ObjectStorageOptions> options,
+    IDistributedCache<ObjectTempCache> distributedCache,
+    IStringLocalizer<ObjectStorageServiceResource> L)
     : IUploadTempFilesRequestHandler
 {
     private string _destinationBucket = options.Value.BucketDestination;
@@ -27,14 +29,6 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
            .Build();
     }).CreateClient();
 
-    private static readonly IContentInspector Inspector =
-    new ContentInspectorBuilder
-    {
-        Definitions = DefaultDefinitions
-        .All()
-        .ToList()
-
-    }.Build();
     public async Task<MessageContract<UploadTempFilesResponse>> Handle(
         UploadTempFilesRequest request,
         CancellationToken cancellationToken)
@@ -48,67 +42,32 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
         {
             _destinationBucket = StorageAppMapping.GetStorageAppType(request.StorageAppType, _environment);
 
-            var id = Guid.NewGuid();
+            var validation = await FileValidator.ValidateAsync(
+                file,
+                cancellationToken);
 
+            if (!validation.IsValid)
+            {
+                result.Files.Add(FailedTempFile(file, Localize(validation.Error, validation.ErrorArgs)));
+                continue;
+            }
+
+            var id = Guid.NewGuid();
             var ext = Path.GetExtension(file.FileName);
             var objectName = $"temp/{id}{ext}";
 
-            await using var stream = file.OpenReadStream();
-
-
-            var results = Inspector.Inspect(stream);
-
-            var detected = results.FirstOrDefault();
-
-
-            if (detected is null)
-            {
-                result.Files.Add(new TempFileModel
-                {
-                    Id = id,
-                    Name = $"Unable to determine file type for '{file.FileName}'.",
-                    MimeType = file.ContentType,
-                    Size = (int)file.Length,
-                    Link = null
-                });
-
-                continue;
-            }
-            var detectedMimeType = detected.Definition.File.MimeType;
-            var detectedExtensions = detected.Definition.File.Extensions;
-
-            var requestedExtension = Path
-                .GetExtension(file.FileName)
-                .TrimStart('.')
-                .ToLowerInvariant();
-
-            if (!detectedExtensions.Any(x =>
-                    string.Equals(x, requestedExtension, StringComparison.OrdinalIgnoreCase)) && file.ContentType!= "image/svg+xml")
-            {
-                result.Files.Add(new TempFileModel
-                {
-                    Id = id,
-                    Name = $"File content does not match extension '.{requestedExtension}'.",
-                    MimeType = file.ContentType,
-                    Size = (int)file.Length,
-                    Link = null
-                });
-
-                continue;
-            }
-            await using var streamChecked = file.OpenReadStream();
-
-            PutObjectResponse response = null;
-
             try
             {
-                var tags = new Dictionary<string, string>()
+                await using var streamChecked = file.OpenReadStream();
+
+                var tags = new Dictionary<string, string>
                 {
-                    {"filename",NormalizeTag(file.FileName)},
-                    {"storageEntityType",request.StorageEntityType},
-                    {"storageAppType",request.StorageAppType.ToString()}
+                    { "filename", NormalizeTag(file.FileName) },
+                    { "storageEntityType", request.StorageEntityType },
+                    { "storageAppType", request.StorageAppType.ToString() }
                 };
-                response = await _client.PutObjectAsync(
+
+                var response = await _client.PutObjectAsync(
                     new PutObjectArgs()
                         .WithBucket(_destinationBucket)
                         .WithObject(objectName)
@@ -118,41 +77,61 @@ public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options, IDis
                         .WithContentType(file.ContentType),
                     cancellationToken);
 
+                result.Files.Add(new TempFileModel
+                {
+                    Id = id,
+                    Name = file.FileName,
+                    MimeType = file.ContentType,
+                    Size = file.Length,
+                    Link =
+                        $"{_baseUrl.TrimEnd('/')}/" +
+                        $"{_destinationBucket}/" +
+                        $"{response.ObjectName}",
+                    Success = true
+                });
+
+                await distributedCache.SetAsync(id.ToString(), new ObjectTempCache
+                {
+                    Id = id,
+                    ObjectKey = response.ObjectName,
+                    ContentType = file.ContentType,
+                    CreationTime = DateTime.Now,
+                    FileName = file.FileName,
+                    Size = (int)file.Length,
+                    App = request.StorageAppType
+                }, new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
+                });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
+                result.Files.Add(FailedTempFile(file, L[FileLocalizationKeys.UploadFailed]));
             }
-
-            result.Files.Add(new TempFileModel
-            {
-                Id = id,
-                Name = file.FileName,
-
-                MimeType = file.ContentType,
-                Size = (int)file.Length,
-
-                Link =
-                    $"{_baseUrl.TrimEnd('/')}/" +
-                    $"{_destinationBucket}/" +
-                    $"{response.ObjectName}",
-            });
-            await distributedCache.SetAsync(id.ToString(), new ObjectTempCache()
-            {
-                Id = id,
-                ObjectKey = response?.ObjectName,
-                ContentType = file.ContentType,
-                CreationTime = DateTime.Now,
-                FileName = file.FileName,
-                Size = (int)file.Length,
-                App = request.StorageAppType
-            }, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1) });
         }
 
-
         return MessageContract<UploadTempFilesResponse>.Success(result);
-
     }
+
+    private string Localize(string? key, object[]? args)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+            return L[FileLocalizationKeys.UploadFailed];
+
+        return args is { Length: > 0 }
+            ? L[key, args]
+            : L[key];
+    }
+
+    private static TempFileModel FailedTempFile(IFormFile file, string? error)
+        => new()
+        {
+            Name = file.FileName,
+            MimeType = file.ContentType,
+            Size = file.Length,
+            Success = false,
+            Error = error
+        };
 
     private static string NormalizeTag(string value)
     {

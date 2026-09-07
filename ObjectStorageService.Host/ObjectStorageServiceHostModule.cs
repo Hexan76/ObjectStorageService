@@ -316,8 +316,8 @@ public class ObjectStorageServiceHostModule : AbpModule
         {
             options.RequestLocalizationOptionConfigurators.Add(async (serviceProvider, requestOptions) =>
             {
-                requestOptions.DefaultRequestCulture = new RequestCulture("en");
-                var supportedCultures = new[] { "en-US", "fa-IR", "fr" };
+                requestOptions.DefaultRequestCulture = new RequestCulture("en-US");
+                var supportedCultures = new[] { "en-US", "fa-IR", "fa-AF", "ps-AF" };
 
                 requestOptions.AddSupportedCultures(supportedCultures);
                 requestOptions.AddSupportedUICultures(supportedCultures);

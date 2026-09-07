@@ -28,7 +28,7 @@ public class SwaggerDefinitions
                     new SwaggerHeaderOption
                     {
                         Name = "Accept-Language",
-                        Description = "Culture Identifier",
+                        Description = "Culture identifier: en-US, fa-IR, fa-AF, ps-AF",
                         Required = false
                     }
                 }

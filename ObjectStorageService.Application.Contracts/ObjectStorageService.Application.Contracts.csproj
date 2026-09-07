@@ -7,7 +7,7 @@
 		<PackageReference Include="FluentValidation" />
 		<PackageReference Include="MediatR" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
-		<PackageReference Include="Mime-Detective" />
+		<PackageReference Include="Mime" />
 		<PackageReference Include="Minio" />
 		<PackageReference Include="NetVips" />
 		<PackageReference Include="NetVips.Native" />

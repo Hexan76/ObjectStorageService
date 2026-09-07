@@ -41,6 +41,7 @@ public sealed class GetTempFilesHandler(
                 Name = tempFile.FileName,
                 MimeType = tempFile.ContentType,
                 Size = tempFile.Size,
+                Success = true,
                 Link =
                     $"{_baseUrl.TrimEnd('/')}/" +
                     $"{bucket}/" +

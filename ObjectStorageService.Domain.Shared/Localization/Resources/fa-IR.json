@@ -1,3 +1,12 @@
 ﻿{
-  "Culture": "fa-IR"
+  "Files": {
+    "Empty": "فایل خالی است.",
+    "ExtensionMissing": "پسوند فایل وجود ندارد.",
+    "ExecutableExtension": "پسوند فایل اجرایی '{0}' مجاز نیست.",
+    "ExecutableMime": "نوع فایل اجرایی '{0}' مجاز نیست.",
+    "ExtensionMimeMismatch": "پسوند فایل '{0}' با نوع MIME شناسایی‌شده '{1}' مطابقت ندارد.",
+    "UploadFailed": "بارگذاری فایل ناموفق بود.",
+    "TempNotFound": "کلید/شناسه {0} در مسیر موقت پیدا نشد.",
+    "FinalizeFailed": "نهایی‌سازی فایل ناموفق بود."
+  }
 }

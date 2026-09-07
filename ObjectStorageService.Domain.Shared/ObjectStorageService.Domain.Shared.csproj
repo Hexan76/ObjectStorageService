@@ -11,8 +11,9 @@
 
 	</ItemGroup>
 	<ItemGroup>
-	  <EmbeddedResource Include="Localization\Resources\en-US.json" />
-	  <EmbeddedResource Include="Localization\Resources\fa-IR.json" />
+	  <EmbeddedResource Include="Localization\Resources\*.json">
+	    <LogicalName>Template.Service.Domain.Shared.Localization.Resources.%(Filename)%(Extension)</LogicalName>
+	  </EmbeddedResource>
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\building-block\src\Framework.BuildingBlock.Domain.Shared\Framework.BuildingBlock.Domain.Shared.csproj" />

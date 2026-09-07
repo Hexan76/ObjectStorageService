@@ -1,4 +1,5 @@
-﻿using Framework.BuildingBlock.HttpApi;
+﻿using Framework.BuildingBlock.Application.Contracts;
+using Framework.BuildingBlock.HttpApi;
 using Microsoft.AspNetCore.Http;
 using ObjectStorageService.Constants;
 
@@ -17,5 +18,11 @@ public class FinalizeFiles : BaseEndpoint<FinalizeFilesRequest, FinalizeFilesRes
         //Permissions();
 
         AllowAnonymous();
+    }
+
+    public override async Task<MessageContract<FinalizeFilesResponse>> ExecuteAsync(FinalizeFilesRequest req, CancellationToken ct)
+    {
+        HttpContext.Response.StatusCode = StatusCodes.Status207MultiStatus;
+        return await base.ExecuteAsync(req, ct);
     }
 }

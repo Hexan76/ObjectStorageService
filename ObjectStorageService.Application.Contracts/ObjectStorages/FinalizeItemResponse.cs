@@ -14,5 +14,6 @@ public class FinalizeItemResponse
 
     public string MimeType { get; set; } = null!;
     public IDictionary<string, string> Variants { get; set; }
-
+    public bool Success { get; set; } = true;
+    public string? Error { get; set; }
 }

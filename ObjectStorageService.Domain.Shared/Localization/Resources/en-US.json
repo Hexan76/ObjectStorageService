@@ -1,3 +1,12 @@
 ﻿{
-  "Culture": "en-US"
+  "Files": {
+    "Empty": "File is empty.",
+    "ExtensionMissing": "File extension is missing.",
+    "ExecutableExtension": "Executable file extension '{0}' is not allowed.",
+    "ExecutableMime": "Executable file type '{0}' is not allowed.",
+    "ExtensionMimeMismatch": "File extension '{0}' does not match the detected MIME type '{1}'.",
+    "UploadFailed": "File upload failed.",
+    "TempNotFound": "The key/Id {0} was not found in temp path.",
+    "FinalizeFailed": "File finalize failed."
+  }
 }

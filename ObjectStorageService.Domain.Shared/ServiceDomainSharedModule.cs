@@ -24,6 +24,14 @@ public class ObjectStorageServiceDomainSharedModule : AbpModule
             options.AddResource<ObjectStorageServiceResource>();
         });
 
+        Configure<SupportedCulturesLocaliztionOptions>(options =>
+        {
+            options.AddCulture("en-US");
+            options.AddCulture("fa-IR");
+            options.AddCulture("fa-AF");
+            options.AddCulture("ps-AF");
+        });
+
         var objectStorageSection = context.Configuration.GetSection("ObjectStorage");
         Configure<ObjectStorageOptions>(options =>
         {

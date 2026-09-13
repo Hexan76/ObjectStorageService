@@ -1,7 +1,9 @@
+using System.Globalization;
 using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel;
 using Minio.DataModel.Args;
+using Minio.DataModel.Response;
 using Volo.Abp.DependencyInjection;
 
 namespace ObjectStorageService.ObjectStorages.Services;
@@ -79,17 +81,45 @@ public class MinioProcessingHelper : IMinioProcessingHelper, IScopedDependency
         return ms;
     }
 
-    public Task PutObjectAsync(string bucket, string objectName, Stream data, string contentType, CancellationToken ct)
+    public async Task<PutObjectResponse?> PutObjectAsync(
+        string bucket,
+        string objectName,
+        Stream data,
+        string contentType,
+        Dictionary<string, string>? tags = null,
+        CancellationToken ct = default)
     {
         data.Position = 0;
-        return _client.PutObjectAsync(
-            new PutObjectArgs()
+
+        var currentCulture = CultureInfo.CurrentCulture;
+        var currentUICulture = CultureInfo.CurrentUICulture;
+
+        try
+        {
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+
+            var args = new PutObjectArgs()
                 .WithBucket(bucket)
                 .WithObject(objectName)
                 .WithStreamData(data)
                 .WithObjectSize(data.Length)
-                .WithContentType(contentType),
-            ct);
+                .WithContentType(contentType);
+
+            if (tags is not null && tags.Count > 0)
+            {
+                args.WithTagging(
+                    new Minio.DataModel.Tags.Tagging(tags, true));
+            }
+
+            return await _client.PutObjectAsync(args, ct);
+
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = currentCulture;
+            CultureInfo.CurrentUICulture = currentUICulture;
+        }
     }
 
     public Task CopyObjectAsync(string bucket, string destObject, string sourceObject, CancellationToken ct)

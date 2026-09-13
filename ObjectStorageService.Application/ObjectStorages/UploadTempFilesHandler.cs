@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel.Args;
 using ObjectStorageService.Domain;
+using ObjectStorageService.ObjectStorages.Services;
 using System.Text.RegularExpressions;
 using Template.Service.Domain.Shared;
 using Volo.Abp.Caching;
@@ -15,6 +16,7 @@ namespace ObjectStorageService.ObjectStorages;
 public class UploadTempFilesHandler(
     IOptions<ObjectStorageOptions> options,
     IDistributedCache<ObjectTempCache> distributedCache,
+    IMinioProcessingHelper minioClient,
     IStringLocalizer<ObjectStorageServiceResource> L)
     : IUploadTempFilesRequestHandler
 {
@@ -67,16 +69,57 @@ public class UploadTempFilesHandler(
                     { "storageAppType", request.StorageAppType.ToString() }
                 };
 
-                var response = await _client.PutObjectAsync(
-                    new PutObjectArgs()
-                        .WithBucket(_destinationBucket)
-                        .WithObject(objectName)
-                        .WithTagging(new Minio.DataModel.Tags.Tagging(tags, true))
-                        .WithStreamData(streamChecked)
-                        .WithObjectSize(file.Length)
-                        .WithContentType(file.ContentType),
+                var response = await minioClient.PutObjectAsync(
+                    _destinationBucket,
+                    objectName,
+                    streamChecked,
+                    file.ContentType,
+                    tags,
                     cancellationToken);
 
+                try
+                {
+                    await distributedCache.SetAsync(
+                        id.ToString(),
+                        new ObjectTempCache
+                        {
+                            Id = id,
+                            ObjectKey = response.ObjectName,
+                            ContentType = file.ContentType,
+                            CreationTime = DateTime.Now,
+                            FileName = file.FileName,
+                            Size = (int)file.Length,
+                            App = request.StorageAppType
+                        },
+                        new DistributedCacheEntryOptions
+                        {
+                            AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
+                        });
+                }
+                catch (Exception redisException)
+                {
+                    // Redis failed, therefore the whole operation failed.
+                    try
+                    {
+                        await minioClient.RemoveObjectAsync(
+                            _destinationBucket,
+                            response.ObjectName,
+                            cancellationToken);
+                    }
+                    catch (Exception cleanupException)
+                    {
+                        // Log cleanupException.
+                    }
+
+                    result.Files.Add(
+                        FailedTempFile(
+                            file,
+                            $"Redis error: {redisException.Message}"));
+
+                    continue;
+                }
+
+                // Only after BOTH MinIO and Redis succeed:
                 result.Files.Add(new TempFileModel
                 {
                     Id = id,
@@ -89,24 +132,13 @@ public class UploadTempFilesHandler(
                         $"{response.ObjectName}",
                     Success = true
                 });
-
-                await distributedCache.SetAsync(id.ToString(), new ObjectTempCache
-                {
-                    Id = id,
-                    ObjectKey = response.ObjectName,
-                    ContentType = file.ContentType,
-                    CreationTime = DateTime.Now,
-                    FileName = file.FileName,
-                    Size = (int)file.Length,
-                    App = request.StorageAppType
-                }, new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
-                });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                result.Files.Add(FailedTempFile(file, L[FileLocalizationKeys.UploadFailed]));
+                result.Files.Add(
+                    FailedTempFile(
+                        file,
+                        ex.Message));
             }
         }
 

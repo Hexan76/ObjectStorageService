@@ -103,6 +103,7 @@ public class FinalizeFilesHandler(
                                     compressedKey,
                                     compressedLoaded.Stream,
                                     _imageHelper.GetContentType(compressedLoaded.Format),
+                                    null,
                                     cancellationToken));
 
 
@@ -123,6 +124,7 @@ public class FinalizeFilesHandler(
                                         thumbKey,
                                         outStream,
                                         _imageHelper.GetContentType(format),
+                                        null,
                                         cancellationToken));
 
 
@@ -152,6 +154,7 @@ public class FinalizeFilesHandler(
                                     key,
                                     outStream,
                                     _imageHelper.GetContentType(format),
+                                    null,
                                     cancellationToken));
 
 
@@ -174,6 +177,7 @@ public class FinalizeFilesHandler(
                                     wmKey,
                                     outStream,
                                     _imageHelper.GetContentType(format),
+                                    null,
                                     cancellationToken));
 
                             variants.Add(ToVariant("watermark", wmKey));

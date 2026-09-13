@@ -85,6 +85,7 @@ public class PromoteFilesHandler(
                             compressedKey,
                             compressedLoaded.Stream,
                             _imageHelper.GetContentType(compressedLoaded.Format),
+                            null,
                             cancellationToken));
 
 
@@ -105,6 +106,7 @@ public class PromoteFilesHandler(
                                 thumbKey,
                                 outStream,
                                 _imageHelper.GetContentType(format),
+                                null,
                                 cancellationToken));
 
 
@@ -134,6 +136,7 @@ public class PromoteFilesHandler(
                             key,
                             outStream,
                             _imageHelper.GetContentType(format),
+                            null,
                             cancellationToken));
 
 
@@ -156,6 +159,7 @@ public class PromoteFilesHandler(
                             wmKey,
                             outStream,
                             _imageHelper.GetContentType(format),
+                            null,
                             cancellationToken));
 
                     variants.Add(ToVariant("watermark", wmKey));

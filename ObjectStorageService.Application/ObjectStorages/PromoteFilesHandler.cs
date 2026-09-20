@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using ObjectStorageService;
 using ObjectStorageService.ObjectStorages;
 using ObjectStorageService.ObjectStorages.Services;
+using Volo.Abp.Caching;
 
 public class PromoteFilesHandler(
     IImageProcessingHelper _imageHelper,
@@ -20,7 +21,7 @@ public class PromoteFilesHandler(
         // watermark is loaded and cached by `_imageHelper` during construction
         var result = new PromoteFilesResponse();
 
-        var uploadTasks = new List<Task>();
+        var removeActions = new List<Func<Task>>();
         foreach (var file in request.Files)
         {
             _bucket = StorageAppMapping.GetStorageAppType(file.AppType, _environment);
@@ -43,6 +44,7 @@ public class PromoteFilesHandler(
 
             var src = await _minioHelper.GetObjectAsStreamAsync(_bucket, objectKey, cancellationToken);
 
+            var uploadTasks = new List<Task>();
 
 
 
@@ -76,7 +78,7 @@ public class PromoteFilesHandler(
                 // ---------------------------
                 // Compressed
                 // ---------------------------
-                var compressedKey = GetStorageKeyFileName(basePath, fileName, "webp");
+                var compressedKey = GetStorageKeyFileName(basePath, $"{fileName}_compressed", "webp");
 
                 var compressedLoaded = await _imageHelper.CompressToWebp(src, 50 * 1024, cancellationToken);
                 uploadTasks.Add(
@@ -167,11 +169,15 @@ public class PromoteFilesHandler(
 
             }
 
+            await Task.WhenAll(uploadTasks);
+
             // ---------------------------
             // DELETE TEMP
             // ---------------------------
             if (request.IsTransaction is true)
-                await _minioHelper.RemoveObjectAsync(_bucket, objectKey, cancellationToken);
+            {
+                removeActions.Add(() => _minioHelper.RemoveObjectAsync(_bucket, objectKey, cancellationToken));
+            }
 
             // ---------------------------
             // RESPONSE
@@ -195,7 +201,11 @@ public class PromoteFilesHandler(
 
         }
 
-        await Task.WhenAll(uploadTasks);
+        var removeTasks = removeActions
+                .Select(x => x())
+                .ToList();
+
+        await Task.WhenAll(removeTasks);
         return new AcceptMessage<PromoteFilesResponse>
         {
             Result = result

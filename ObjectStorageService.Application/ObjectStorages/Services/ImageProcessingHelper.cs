@@ -301,7 +301,8 @@ public class ImageProcessingHelper : IImageProcessingHelper, IScopedDependency
 
         using var wm = _cachedWatermark.Clone();
 
-        var wmWidth = image.Width / 4;
+        var wmWidth = Math.Max(90, (int)Math.Round(Math.Min(image.Width, image.Height) * 0.30));
+
         var wmHeight = wm.Height * wmWidth / wm.Width;
 
         wm.Mutate(x => x.Resize(wmWidth, wmHeight));
@@ -419,7 +420,7 @@ public class ImageProcessingHelper : IImageProcessingHelper, IScopedDependency
     private void ShrinkIfNeeded(Image<Rgba32> img, int targetSize)
     {
         long pixels = img.Width * img.Height;
-        long expectedBytes = pixels / 7; 
+        long expectedBytes = pixels / 7;
 
         if (expectedBytes <= targetSize)
             return;

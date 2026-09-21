@@ -308,7 +308,7 @@ public class ImageProcessingHelper : IImageProcessingHelper, IScopedDependency
 
         var position = new Point((image.Width - wmWidth) / 2, (image.Height - wmHeight) / 2);
 
-        ctx.DrawImage(wm, position, 0.5f);
+        ctx.DrawImage(wm, position, 1);
     }
 
     private async Task SaveWithOriginalFormat(

@@ -103,7 +103,7 @@ public sealed class ImageUrlProcessor(
             throw new InvalidOperationException(L[FileLocalizationKeys.InvalidImageUrl]);
         }
 
-        var segments = uri.AbsolutePath.Trim('/').Split('/', StringSplitOptions.RemoveEmptyEntries);
+        var segments = uri.LocalPath.Trim('/').Split('/', StringSplitOptions.RemoveEmptyEntries);
         if (segments.Length < 2)
             throw new InvalidOperationException(L[FileLocalizationKeys.InvalidImageUrl]);
 

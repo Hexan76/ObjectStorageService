@@ -48,21 +48,12 @@ public sealed class NetVipsImageProcessingHelper : INetImageProcessingHelper, ID
         using var image = await LoadAsync(input, ct);
         using var oriented = image.Autorot();
 
-        var resized = ResizeIfNeeded(oriented, width, height);
+        using var resized = ResizeIfNeeded(oriented, width, height);
 
         if (_isCompress)
-        {
-            using (resized)
-            {
-                return await CompressImageToWebpAsync(resized, _defaultCompressionTargetSize, ct);
-            }
-        }
+            return await CompressImageAsync(resized, _defaultCompressionTargetSize, ct);
 
-        using (resized)
-        {
-            var format = DetectFormat(image);
-            return await WriteAsync(resized, format, 90, ct);
-        }
+        return await WriteAsync(resized, DetectFormat(image), 90, ct);
     }
 
     public async Task<(MemoryStream Stream, ImageFormat Format)> Thumbnail(Stream input, int width, int height, CancellationToken ct = default)
@@ -77,73 +68,33 @@ public sealed class NetVipsImageProcessingHelper : INetImageProcessingHelper, ID
         scale = Math.Min(scale, 1.0);
         using var resized = oriented.Resize(scale, Enums.Kernel.Lanczos3);
 
-        var qualities = new[] { 35, 25, 18, 12 };
-        MemoryStream? best = null;
+        if (_isCompress)
+            return await CompressImageAsync(resized, _thumbnailTargetSize, ct, [35, 25, 18, 12]);
 
-        try
-        {
-            foreach (var quality in qualities)
-            {
-                ct.ThrowIfCancellationRequested();
-                var bytes = resized.WriteToBuffer($".webp[Q={quality},smart_subsample=true,strip=true]");
-                var candidate = new MemoryStream(bytes, writable: false);
-
-                if (best is null || candidate.Length < best.Length)
-                {
-                    best?.Dispose();
-                    best = candidate;
-                }
-                else
-                {
-                    candidate.Dispose();
-                }
-
-                if (best.Length <= _thumbnailTargetSize)
-                {
-                    best.Position = 0;
-                    return (best, ImageFormat.Webp);
-                }
-            }
-            using var smaller = oriented.Resize(scale, Enums.Kernel.Lanczos3);
-            var smallerBytes = smaller.WriteToBuffer(".webp[Q=12,smart_subsample=tsrue,strip=true]");
-            var smallerStream = new MemoryStream(smallerBytes, writable: false);
-
-            if (best is null || smallerStream.Length < best.Length)
-            {
-                best?.Dispose();
-                best = smallerStream;
-            }
-            else
-            {
-                smallerStream.Dispose();
-            }
-
-            best.Position = 0;
-            return (best, ImageFormat.Webp);
-        }
-        catch
-        {
-            best?.Dispose();
-            throw;
-        }
+        return await WriteAsync(resized, DetectFormat(image), 90, ct);
     }
 
-    public async Task<(MemoryStream Stream, ImageFormat Format)> ApplyWatermarkAsync(Stream input, CancellationToken ct = default)
+    public Task<(MemoryStream Stream, ImageFormat Format)> ApplyWatermarkAsync(Stream input, CancellationToken ct = default)
+        => ApplyWatermarkCoreAsync(input, _cachedWatermark, ct);
+
+    public async Task<(MemoryStream Stream, ImageFormat Format)> ApplyWatermarkAsync(Stream input, Stream watermarkSvg, CancellationToken ct = default)
+    {
+        ct.ThrowIfCancellationRequested();
+        using var watermark = LoadSvg(watermarkSvg);
+        return await ApplyWatermarkCoreAsync(input, watermark, ct);
+    }
+
+    private async Task<(MemoryStream Stream, ImageFormat Format)> ApplyWatermarkCoreAsync(Stream input, Image? watermark, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
 
-        if (_isCompress)
-        {
-            var compressed = await CompressToWebp(input, _defaultCompressionTargetSize, ct);
-            using var compressedImage = Load(compressed.Stream);
-            using var watermarked = ApplyWatermark(compressedImage);
-            return await WriteAsync(watermarked, ImageFormat.FromMimeType(_compressMimeType), 90, ct);
-        }
-
         using var image = Load(input);
-        var format = DetectFormat(image);
-        using var result = ApplyWatermark(image);
-        return await WriteAsync(result, format, 90, ct);
+        using var watermarked = ApplyWatermark(image, watermark);
+
+        if (_isCompress)
+            return await CompressImageAsync(watermarked, _defaultCompressionTargetSize, ct);
+
+        return await WriteAsync(watermarked, DetectFormat(image), 90, ct);
     }
 
     public async Task<(MemoryStream Stream, ImageFormat Format)> CompressToWebp(
@@ -156,28 +107,28 @@ public sealed class NetVipsImageProcessingHelper : INetImageProcessingHelper, ID
 
         ct.ThrowIfCancellationRequested();
 
-        await using var source = new MemoryStream();
-
-        await input.CopyToAsync(source, ct);
-
-        source.Position = 0;
         using var image = await LoadAsync(input, ct);
         using var oriented = image.Autorot();
         using var current = ShrinkIfNeeded(oriented, targetSize);
+        return await CompressImageAsync(current, targetSize, ct);
+    }
 
+    private Task<(MemoryStream Stream, ImageFormat Format)> CompressImageAsync(
+        Image image,
+        int targetSize,
+        CancellationToken ct,
+        int[]? qualities = null)
+    {
+        var format = OutputFormat();
+        qualities ??= [80, 65, 50, 35, 25];
         MemoryStream? best = null;
-
-        var qualities = new[] { 80, 65, 50, 35, 25 };
 
         try
         {
             foreach (var quality in qualities)
             {
                 ct.ThrowIfCancellationRequested();
-
-                var bytes = current.WriteToBuffer(
-                    $".webp[Q={quality},smart_subsample=true]");
-
+                var bytes = image.WriteToBuffer(GetWriteSuffix(format, quality));
                 var candidate = new MemoryStream(bytes, writable: false);
 
                 if (best is null || candidate.Length < best.Length)
@@ -193,12 +144,12 @@ public sealed class NetVipsImageProcessingHelper : INetImageProcessingHelper, ID
                 if (best.Length <= targetSize)
                 {
                     best.Position = 0;
-                    return (best, ImageFormat.Webp);
+                    return Task.FromResult((best, format));
                 }
             }
 
             best!.Position = 0;
-            return (best, ImageFormat.Webp);
+            return Task.FromResult((best, format));
         }
         catch
         {
@@ -206,56 +157,11 @@ public sealed class NetVipsImageProcessingHelper : INetImageProcessingHelper, ID
             throw;
         }
     }
-    private static Task<(MemoryStream Stream, ImageFormat Format)> CompressImageToWebpAsync(
-    Image image,
-    int targetSize,
-    CancellationToken ct)
+
+    private ImageFormat OutputFormat()
     {
-        var qualities = new[] { 80, 65, 50, 35, 25 };
-
-        MemoryStream? best = null;
-
-        try
-        {
-            foreach (var quality in qualities)
-            {
-                ct.ThrowIfCancellationRequested();
-
-                var bytes = image.WriteToBuffer(
-                    $".webp[Q={quality},smart_subsample=true,strip=true]");
-
-                var candidate = new MemoryStream(
-                    bytes,
-                    writable: false);
-
-                if (best is null || candidate.Length < best.Length)
-                {
-                    best?.Dispose();
-                    best = candidate;
-                }
-                else
-                {
-                    candidate.Dispose();
-                }
-
-                if (best.Length <= targetSize)
-                {
-                    best.Position = 0;
-                    return Task.FromResult(
-                        (best, ImageFormat.Webp));
-                }
-            }
-
-            best!.Position = 0;
-
-            return Task.FromResult(
-                (best, ImageFormat.Webp));
-        }
-        catch
-        {
-            best?.Dispose();
-            throw;
-        }
+        var format = ImageFormat.FromMimeType(_compressMimeType);
+        return format == ImageFormat.Unknown ? ImageFormat.Webp : format;
     }
     public async Task<(MemoryStream Stream, ImageFormat Format)> LoadOrginal(Stream input, CancellationToken ct = default)
     {
@@ -333,15 +239,30 @@ public sealed class NetVipsImageProcessingHelper : INetImageProcessingHelper, ID
         return image.Resize(scale, Enums.Kernel.Lanczos3);
     }
 
-    private Image ApplyWatermark(Image image)
+    private static Image LoadSvg(Stream input)
     {
-        if (_cachedWatermark is null)
+        if (input.CanSeek)
+            input.Position = 0;
+
+        using var buffer = new MemoryStream();
+        input.CopyTo(buffer);
+        var bytes = buffer.ToArray();
+
+        if (bytes.Length == 0)
+            throw new InvalidOperationException("Watermark SVG stream is empty.");
+
+        return Image.SvgloadBuffer(bytes, access: Enums.Access.Sequential);
+    }
+
+    private static Image ApplyWatermark(Image image, Image? watermarkSource)
+    {
+        if (watermarkSource is null)
             return image.Copy();
 
         var wmWidth = Math.Max(1, image.Width / 4);
-        var wmScale = (double)wmWidth / _cachedWatermark.Width;
+        var wmScale = (double)wmWidth / watermarkSource.Width;
 
-        using var resized = _cachedWatermark.Resize(
+        using var resized = watermarkSource.Resize(
             wmScale,
             Enums.Kernel.Lanczos3);
 

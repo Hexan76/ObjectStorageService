@@ -7,6 +7,11 @@
     "ExtensionMimeMismatch": "د فایل پراختیا '{0}' د موندل شوي MIME ډول '{1}' سره سمون نه خوري.",
     "UploadFailed": "د فایل پورته کول ناکام شول.",
     "TempNotFound": "کیلي/پېژند {0} په لنډمهاله مسیر کې ونه موندل شو.",
-    "FinalizeFailed": "د فایل نهايي کول ناکام شول."
+    "FinalizeFailed": "د فایل نهايي کول ناکام شول.",
+    "ProcessFailed": "د انځور پروسس ناکام شو.",
+    "WatermarkRequired": "د SVG واټرمارک فایل اړین دی.",
+    "InvalidSizes": "اندازې باید د JSON لړۍ وي چې پلنوالی او لوړوالی یې له صفر څخه لوی وي.",
+    "NotAnImage": "فایل '{0}' ملاتړ شوی انځور نه دی.",
+    "InvalidImageUrl": "د انځور پته باید مطلق http یا https URL وي."
   }
 }

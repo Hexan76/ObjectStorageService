@@ -7,6 +7,11 @@
     "ExtensionMimeMismatch": "پسوند فایل '{0}' با نوع MIME شناسایی‌شده '{1}' مطابقت ندارد.",
     "UploadFailed": "بارگذاری فایل ناموفق بود.",
     "TempNotFound": "کلید/شناسه {0} در مسیر موقت پیدا نشد.",
-    "FinalizeFailed": "نهایی‌سازی فایل ناموفق بود."
+    "FinalizeFailed": "نهایی‌سازی فایل ناموفق بود.",
+    "ProcessFailed": "پردازش تصویر ناموفق بود.",
+    "WatermarkRequired": "فایل واترمارک SVG الزامی است.",
+    "InvalidSizes": "اندازه‌ها باید آرایه JSON با عرض و ارتفاع بزرگ‌تر از صفر باشند.",
+    "NotAnImage": "فایل '{0}' تصویر پشتیبانی‌شده نیست.",
+    "InvalidImageUrl": "آدرس تصویر باید یک URL مطلق http یا https باشد."
   }
 }

@@ -7,6 +7,11 @@
     "ExtensionMimeMismatch": "File extension '{0}' does not match the detected MIME type '{1}'.",
     "UploadFailed": "File upload failed.",
     "TempNotFound": "The key/Id {0} was not found in temp path.",
-    "FinalizeFailed": "File finalize failed."
+    "FinalizeFailed": "File finalize failed.",
+    "ProcessFailed": "Image processing failed.",
+    "WatermarkRequired": "An SVG watermark file is required.",
+    "InvalidSizes": "Sizes must be a JSON array of width and height greater than zero.",
+    "NotAnImage": "File '{0}' is not a supported image.",
+    "InvalidImageUrl": "Image URL must be an absolute http or https address."
   }
 }

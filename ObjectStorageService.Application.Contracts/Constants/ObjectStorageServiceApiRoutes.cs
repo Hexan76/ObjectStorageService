@@ -8,4 +8,5 @@ public class ObjectStorageServiceApiRoutes
     public const string Application = $"{Prefix}/ObjectStorageService";
 
     public static ObjectStoragesRoutes ObjectStorages = new(Application, ObjectStorageServiceApiTags.ObjectStorage);
+    public static ImageProcessingRoutes ImageProcessing = new(Application, ObjectStorageServiceApiTags.ImageProcessing);
 }

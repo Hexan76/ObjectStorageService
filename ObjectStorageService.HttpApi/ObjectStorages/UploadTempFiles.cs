@@ -10,8 +10,9 @@ public class UploadTempFiles : BaseEndpoint<UploadTempFilesRequest, UploadTempFi
     public override void Configure()
     {
         Verbs(Http.POST);
+        Routes("{version}/api/ObjectStorageService/object-storage/temp", "api/{version}/object-storage/temp");
+
         Version(1);
-        Routes(ObjectStorageServiceApiRoutes.ObjectStorages.Temp);
         Tags([ObjectStorageServiceApiTags.ObjectStorage]);
         Options(c => c.WithTags([ObjectStorageServiceApiTags.ObjectStorage]));
         //Policies();

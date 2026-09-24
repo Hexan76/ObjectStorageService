@@ -3,4 +3,5 @@
 public class ObjectStorageServiceApiTags
 {
     public const string ObjectStorage = "object-storage";
+    public const string ImageProcessing = "image-processing";
 }

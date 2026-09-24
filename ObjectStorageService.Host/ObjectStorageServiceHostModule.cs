@@ -205,7 +205,7 @@ public class ObjectStorageServiceHostModule : AbpModule
         context.Services.AddFastEndpoints(c =>
         {
             c.IncludeAbstractValidators = true;
-        }).FrameworkNSwagDocsPerModule(SwaggerDefinitions.GetSwaggerModules());
+        }).AddOpenApiDocuments(SwaggerDefinitions.GetSwaggerModules());
 
         //context.Services.Replace(ServiceDescriptor.Singleton<IAuthorizationPolicyProvider, BearerAwarePolicyProvider>());
 
@@ -448,8 +448,9 @@ public class ObjectStorageServiceHostModule : AbpModule
 
         app.UseFastEndpoints(cfg =>
         {
-            cfg.Versioning.Prefix = "v";
-            cfg.Versioning.PrependToRoute = true;
+            // cfg.Versioning.Prefix = "v";
+            cfg.Versioning.PrependToRoute = false;
+            cfg.Versioning.RouteTemplate = "{version}";
             cfg.Errors.ResponseBuilder = (failures, ctx, statusCode) =>
             {
                 var validationFailureHandler =

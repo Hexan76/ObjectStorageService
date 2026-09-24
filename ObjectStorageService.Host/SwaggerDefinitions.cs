@@ -13,9 +13,8 @@ public class SwaggerDefinitions
                 DocumentName = "ObjectStorageService Api",
                 Title = "ObjectStorageService Api",
                 Version = "Version 1.0.0",
-                ApiVersion=1,
-                EndpointFilter = ep =>
-                    ep.Routes.Any(c => c.Contains("object-storage", StringComparison.OrdinalIgnoreCase)),
+                // ApiVersion=1,
+                EndpointFilter = ep =>true,
                 ExcludeNonFastEndpoints = true,
                 Headers = new List<SwaggerHeaderOption>
                 {

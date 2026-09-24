@@ -5,13 +5,15 @@ using ObjectStorageService.Constants;
 
 namespace ObjectStorageService.ObjectStorages;
 
-public class FinalizeFiles : BaseEndpoint<FinalizeFilesRequest, FinalizeFilesResponse> 
+public class FinalizeFiles : BaseEndpoint<FinalizeFilesRequest, FinalizeFilesResponse>
 {
     public override void Configure()
     {
         Verbs(Http.POST);
+        //Routes(ObjectStorageServiceApiRoutes.ObjectStorages.Finalize);
+        Routes("{version}/api/ObjectStorageService/object-storage/finalize", "api/{version}/object-storage/finalize");
+
         Version(1);
-        Routes(ObjectStorageServiceApiRoutes.ObjectStorages.Finalize);
         Tags([ObjectStorageServiceApiTags.ObjectStorage]);
         Options(c => c.WithTags([ObjectStorageServiceApiTags.ObjectStorage]));
         //Policies();

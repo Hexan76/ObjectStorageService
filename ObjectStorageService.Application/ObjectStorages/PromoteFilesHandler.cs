@@ -188,7 +188,7 @@ public class PromoteFilesHandler(
             {
                 FileName = stat.ObjectName,
                 MimeType = stat.ContentType,
-                StorageKey = objectKey,
+                StorageKey = originalKey,
                 Size = stat.Size,
                 URL = BuildUrl(originalKey),
                 Variants = variants
@@ -284,7 +284,8 @@ public class PromoteFilesHandler(
 
     private static string GetStorageKeyFileName(string basePath, string fileName, string extension)
     {
-        return $"{basePath}/{fileName}.{extension}";
+        var normalizedExtension = extension.Trim().TrimStart('.');
+        return $"{basePath}/{fileName}.{normalizedExtension}";
     }
     private static string GetObjectKeyFromUrl(string url, string bucket)
     {

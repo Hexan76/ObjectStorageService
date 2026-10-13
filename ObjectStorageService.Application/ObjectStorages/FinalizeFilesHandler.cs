@@ -201,7 +201,7 @@ public class FinalizeFilesHandler(
                     Id = file.Id,
                     FileName = tempObject.FileName,
                     MimeType = tempObject.ContentType,
-                    StorageKey = tempObject.ObjectKey,
+                    StorageKey = originalKey,
                     Size = tempObject.Size,
                     URL = BuildUrl(originalKey),
                     Success = true,
@@ -327,7 +327,8 @@ public class FinalizeFilesHandler(
 
     private static string GetStorageKeyFileName(string basePath, string fileName, string extension)
     {
-        return $"{basePath}/{fileName}.{extension}";
+        var normalizedExtension = extension.Trim().TrimStart('.');
+        return $"{basePath}/{fileName}.{normalizedExtension}";
     }
 
 }

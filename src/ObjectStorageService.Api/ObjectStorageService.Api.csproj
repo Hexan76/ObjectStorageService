@@ -27,12 +27,16 @@
 		<PackageReference Include="Serilog.AspNetCore" />
 		<PackageReference Include="Serilog.Sinks.Async" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+		<PackageReference Include="FastEndpoints" />
+		<PackageReference Include="FastEndpoints.Swagger" />
+		<PackageReference Include="MassTransit" />
+		<PackageReference Include="Volo.Abp.AspNetCore.Mvc" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\ObjectStorageService.Application\ObjectStorageService.Application.csproj" />
-		<ProjectReference Include="..\ObjectStorageService.EntityFrameworkCore\ObjectStorageService.EntityFrameworkCore.csproj" />
-		<ProjectReference Include="..\ObjectStorageService.HttpApi\ObjectStorageService.HttpApi.csproj" />
+		<ProjectReference Include="..\ObjectStorageService.Infrastructure\ObjectStorageService.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\..\building-block\src\Framework.BuildingBlock.HttpApi\Framework.BuildingBlock.HttpApi.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Update="web.config">

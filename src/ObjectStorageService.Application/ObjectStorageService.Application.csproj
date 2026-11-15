@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>ObjectStorageService</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" />
+        <PackageReference Include="MassTransit" />
+        <PackageReference Include="MediatR" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="Mime" />
+        <PackageReference Include="Minio" />
+        <PackageReference Include="NetVips" />
+        <PackageReference Include="NetVips.Native" />
+        <PackageReference Include="SixLabors.ImageSharp" />
+        <PackageReference Include="SixLabors.ImageSharp.Drawing" />
+        <PackageReference Include="Svg.Skia" />
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" />
+        <PackageReference Include="pythonnet" />
+        <PackageReference Include="Volo.Abp.Ddd.Application.Contracts" />
+        <PackageReference Include="Volo.Abp.Authorization" />
+        <PackageReference Include="Volo.Abp.LuckyPenny.AutoMapper" />
+        <PackageReference Include="Volo.Abp.Ddd.Application" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\building-block\src\Framework.BuildingBlock.Application.Contracts\Framework.BuildingBlock.Application.Contracts.csproj" />
+        <ProjectReference Include="..\..\..\building-block\src\Framework.BuildingBlock.Application\Framework.BuildingBlock.Application.csproj" />
+        <ProjectReference Include="..\ObjectStorageService.Domain\ObjectStorageService.Domain.csproj" />
+    </ItemGroup>
+</Project>

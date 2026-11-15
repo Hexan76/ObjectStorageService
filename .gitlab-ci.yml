@@ -1,15 +1,12 @@
-
 stages:
   - build
   - push
+  - update_tag
   - deploy
 
 default:
   tags:
     - deploy
-  before_script:
-    - echo "Running on shell runner"
-    - docker --version
 
 variables:
   DOCKER_BUILDKIT: "1"
@@ -17,164 +14,209 @@ variables:
 
 workflow:
   rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
+    - if: '$CI_COMMIT_TAG =~ /^stage-[0-9]+\.[0-9]+\.[0-9]+$/'
       variables:
-        ENVIRONMENT: "stage"
-        IMAGE_TAG: "stage-${CI_PIPELINE_IID}"
-    - if: '$CI_COMMIT_BRANCH == "prod"'
-      variables:
-        ENVIRONMENT: "production"
-        IMAGE_TAG: "prod-${CI_PIPELINE_IID}"
-    - when: never
+        ENVIRONMENT: stage
+        DEPLOY_COOLIFY_WEBHOOK: $COOLIFY_WEBHOOK
+        DEPLOY_COOLIFY_TOKEN: $COOLIFY_TOKEN
+        DEPLOY_COOLIFY_APPLICATION_ID: $COOLIFY_APPLICATION_ID
+        DEPLOY_COOLIFY_URL: $COOLIFY_URL_STAGE
+        DEPLOY_COOLIFY_METHOD: POST
+        TARGET_PLATFORM: $TARGET_PLATFORM_STAGE
 
-.branch_rules:
+    - if: '$CI_COMMIT_TAG =~ /^prod-[0-9]+\.[0-9]+\.[0-9]+$/'
+      variables:
+        ENVIRONMENT: production
+        DEPLOY_COOLIFY_WEBHOOK: $COOLIFY_WEBHOOK_PROD
+        DEPLOY_COOLIFY_TOKEN: $COOLIFY_TOKEN_PROD
+        DEPLOY_COOLIFY_APPLICATION_ID: $COOLIFY_APPLICATION_ID_PROD
+        DEPLOY_COOLIFY_URL: $COOLIFY_URL_PROD
+        DEPLOY_COOLIFY_METHOD: GET
+        TARGET_PLATFORM: $TARGET_PLATFORM_PROD
+
+.pipeline_rules: &pipeline_rules
   rules:
-    - if: '$CI_COMMIT_BRANCH =~ /^(dev|prod)$/'
+    - if: '$CI_COMMIT_TAG =~ /^(stage|prod)-[0-9]+\.[0-9]+\.[0-9]+$/'
 
-# --------------------------------------------
-# BUILD
-# --------------------------------------------
+before_script:
+  - echo "Running on shell runner"
+  - docker --version
+  - |
+    # APP_VERSION avoids collision with host VERSION on the shell runner.
+    # VERSION_TAG is the release people read. BUILD_TAG is one immutable build.
+    APP_VERSION=$(echo "$CI_COMMIT_TAG" | sed -E 's/^(stage|prod)-//')
+    RELEASE_CHANNEL=$(echo "$CI_COMMIT_TAG" | sed -E 's/^([a-z]+)-[0-9]+\.[0-9]+\.[0-9]+$/\1/')
+    case "$RELEASE_CHANNEL" in
+      stage) TAG_CHANNEL=stage ;;
+      prod) TAG_CHANNEL=prod ;;
+      *)
+        echo "RELEASE_CHANNEL must be stage or prod, got: $RELEASE_CHANNEL (tag: $CI_COMMIT_TAG)"
+        exit 1
+        ;;
+    esac
+    VERSION_TAG="$CI_COMMIT_TAG"
+    BUILD_TAG="${TAG_CHANNEL}-${CI_PIPELINE_IID}-${CI_COMMIT_SHORT_SHA}"
+    BUILDING_BLOCK_REVISION=$(sed -n 's/.*<BuildingBlock>\([^<]*\)<\/BuildingBlock>.*/\1/p' "$CI_PROJECT_DIR/Directory.Packages.props" | head -n 1 | tr -d '\r')
+    if [ -z "$BUILDING_BLOCK_REVISION" ]; then
+      BUILDING_BLOCK_REVISION=none
+    fi
+    if [ -z "$EXPOSE_PORT" ]; then
+      echo "EXPOSE_PORT CI/CD variable is required"
+      exit 1
+    fi
+    if ! echo "$APP_VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+      echo "APP_VERSION must be numeric x.y.z (tag like stage-1.0.1), got: $APP_VERSION (tag: $CI_COMMIT_TAG)"
+      exit 1
+    fi
+    if ! echo "$BUILD_TAG" | grep -Eq '^(stage|prod)-[0-9]+-[0-9a-f]+$'; then
+      echo "BUILD_TAG must be stage-<pipeline-iid>-<git-sha> or prod-<pipeline-iid>-<git-sha>, got: $BUILD_TAG"
+      exit 1
+    fi
+    export APP_VERSION RELEASE_CHANNEL TAG_CHANNEL VERSION_TAG BUILD_TAG EXPOSE_PORT BUILDING_BLOCK_REVISION
+    echo "Tag=$CI_COMMIT_TAG Version=$VERSION_TAG Assembly=$APP_VERSION Build=$BUILD_TAG Port=$EXPOSE_PORT Environment=$ENVIRONMENT Revision=$CI_COMMIT_SHA BuildingBlock=$BUILDING_BLOCK_REVISION"
+
 build_image:
   stage: build
-  extends: .branch_rules
+  <<: *pipeline_rules
   script:
     - |
-      set -euo pipefail
+      set -e
 
-      case "$CI_COMMIT_BRANCH" in
-        dev)
-          BUILDING_BLOCK_REF="dev"
-          PLATFORM="${DOCKER_PLATFORM_STAGE:?Missing DOCKER_PLATFORM_STAGE}"
-          ;;
-        prod)
-          BUILDING_BLOCK_REF="prod"
-          PLATFORM="${DOCKER_PLATFORM_PROD:?Missing DOCKER_PLATFORM_PROD}"
-          ;;
-        *)
-          echo "Unsupported branch: $CI_COMMIT_BRANCH" >&2
-          exit 1
-          ;;
+      echo "Preparing docker context..."
+      echo "Version     : $VERSION_TAG"
+      echo "Assembly    : $APP_VERSION"
+      echo "Build tag   : $BUILD_TAG"
+      echo "Expose port : $EXPOSE_PORT"
+      echo "Environment : $ENVIRONMENT"
+
+      rm -rf .docker-context
+      mkdir -p .docker-context/object-storage-service
+
+      echo "Copying current project..."
+      tar \
+        --exclude=".git" \
+        --exclude=".docker-context" \
+        -C "$CI_PROJECT_DIR" \
+        -cf - . | tar -C "$CI_PROJECT_DIR/.docker-context/object-storage-service" -xf -
+
+      case "$RELEASE_CHANNEL" in
+        stage) BUILDING_BLOCK_REF="dev" ;;
+        prod) BUILDING_BLOCK_REF="prod" ;;
       esac
-
       : "${BUILDING_BLOCK_USERNAME:?Missing BUILDING_BLOCK_USERNAME}"
       : "${BUILDING_BLOCK_TOKEN:?Missing BUILDING_BLOCK_TOKEN}"
 
-      echo "Preparing Docker build context..."
-      rm -rf "$CI_PROJECT_DIR/.docker-context"
-      mkdir -p "$CI_PROJECT_DIR/.docker-context/object-storage-service"
-
-      echo "Copying current project..."
-      tar --exclude='.git' --exclude='.docker-context' \
-        -C "$CI_PROJECT_DIR" -cf - . | \
-        tar -C "$CI_PROJECT_DIR/.docker-context/object-storage-service" -xf -
-
       echo "Cloning building-block ($BUILDING_BLOCK_REF)..."
-      git clone --depth 1 \
-        --branch "$BUILDING_BLOCK_REF" \
-        "https://${BUILDING_BLOCK_USERNAME}:${BUILDING_BLOCK_TOKEN}@gitlab.bsla.dev/microservice/dotnet/building-block.git" \
-        "$CI_PROJECT_DIR/.docker-context/building-block"
+      git clone --depth 1         --branch "$BUILDING_BLOCK_REF"         "https://${BUILDING_BLOCK_USERNAME}:${BUILDING_BLOCK_TOKEN}@gitlab.bsla.dev/microservice/dotnet/building-block.git"         "$CI_PROJECT_DIR/.docker-context/building-block"
 
-      export DOCKER_CONFIG="$(mktemp -d)"
-      trap 'rm -rf "$DOCKER_CONFIG"' EXIT
-      printf '%s' "$CI_REGISTRY_PASSWORD" | \
-        docker login "$CI_REGISTRY" --username "$CI_REGISTRY_USER" --password-stdin
+      echo "Login to GitLab Registry..."
+      echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
 
-      echo "Building ${CI_REGISTRY_IMAGE}:${IMAGE_TAG} for ${PLATFORM}..."
+      echo "Building docker image..."
       docker build \
-        --platform "$PLATFORM" \
+        --platform "$TARGET_PLATFORM" \
         --provenance=false \
-        -t "$CI_REGISTRY_IMAGE:$IMAGE_TAG" \
+        --build-arg SERVICE_NAME=ObjectStorageService \
+        --build-arg SERVICE_SCOPE=object-storage \
+        --build-arg RELEASE_CHANNEL="$RELEASE_CHANNEL" \
+        --build-arg VERSION="$VERSION_TAG" \
+        --build-arg ASSEMBLY_VERSION="$APP_VERSION" \
+        --build-arg BUILD_TAG="$BUILD_TAG" \
+        --build-arg REVISION="$CI_COMMIT_SHA" \
+        --build-arg SOURCE="$CI_PROJECT_URL" \
+        --build-arg MIGRATIONS=false \
+        --build-arg MIGRATION_ENTRYPOINT=none \
+        --build-arg BUILDING_BLOCK_REVISION="$BUILDING_BLOCK_REVISION" \
+        --build-arg EXPOSE_PORT="$EXPOSE_PORT" \
+        -t "$CI_REGISTRY_IMAGE:$VERSION_TAG" \
+        -t "$CI_REGISTRY_IMAGE:$BUILD_TAG" \
         -t "$CI_REGISTRY_IMAGE:$ENVIRONMENT" \
         -f "$CI_PROJECT_DIR/.docker-context/object-storage-service/Dockerfile" \
         "$CI_PROJECT_DIR/.docker-context"
 
-# --------------------------------------------
-# PUSH
-# --------------------------------------------
 push_image:
   stage: push
-  extends: .branch_rules
+  <<: *pipeline_rules
   needs:
     - build_image
   script:
     - |
-      set -euo pipefail
+      set -e
 
-      export DOCKER_CONFIG="$(mktemp -d)"
-      trap 'rm -rf "$DOCKER_CONFIG"' EXIT
-      printf '%s' "$CI_REGISTRY_PASSWORD" | \
-        docker login "$CI_REGISTRY" --username "$CI_REGISTRY_USER" --password-stdin
+      echo "Login to GitLab Registry..."
+      echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
 
-      echo "Pushing versioned image..."
-      docker push "$CI_REGISTRY_IMAGE:$IMAGE_TAG"
-
-      echo "Pushing environment alias..."
+      echo "Pushing docker image..."
+      docker push "$CI_REGISTRY_IMAGE:$VERSION_TAG"
+      docker push "$CI_REGISTRY_IMAGE:$BUILD_TAG"
       docker push "$CI_REGISTRY_IMAGE:$ENVIRONMENT"
 
-      echo "Pushed: $CI_REGISTRY_IMAGE:$IMAGE_TAG"
-      echo "Alias:  $CI_REGISTRY_IMAGE:$ENVIRONMENT"
+      echo "Image pushed successfully:"
+      echo "Environment : $ENVIRONMENT"
+      echo "Version     : $CI_REGISTRY_IMAGE:$VERSION_TAG"
+      echo "Build       : $CI_REGISTRY_IMAGE:$BUILD_TAG"
+      echo "Alias       : $CI_REGISTRY_IMAGE:$ENVIRONMENT"
 
-# --------------------------------------------
-# DEPLOY TO COOLIFY
-# --------------------------------------------
-deploy_coolify:
-  stage: deploy
-  extends: .branch_rules
+update_coolify_tag:
+  stage: update_tag
+  <<: *pipeline_rules
   needs:
     - push_image
   script:
     - |
-      set -euo pipefail
+      set -e
 
-      case "$CI_COMMIT_BRANCH" in
-        dev)
-          BASE_URL="${COOLIFY_URL_STAGE:?Missing COOLIFY_URL_STAGE}"
-          APP_ID="${COOLIFY_APPLICATION_ID_STAGE:?Missing COOLIFY_APPLICATION_ID_STAGE}"
-          DEPLOY_WEBHOOK="${COOLIFY_WEBHOOK_STAGE:?Missing COOLIFY_WEBHOOK_STAGE}"
-          API_TOKEN="${COOLIFY_TOKEN_STAGE:?Missing COOLIFY_TOKEN_STAGE}"
-          ;;
-        prod)
-          BASE_URL="${COOLIFY_URL_PROD:?Missing COOLIFY_URL_PROD}"
-          APP_ID="${COOLIFY_APPLICATION_ID_PROD:?Missing COOLIFY_APPLICATION_ID_PROD}"
-          DEPLOY_WEBHOOK="${COOLIFY_WEBHOOK_PROD:?Missing COOLIFY_WEBHOOK_PROD}"
-          API_TOKEN="${COOLIFY_TOKEN_PROD:?Missing COOLIFY_TOKEN_PROD}"
-          ;;
-        *)
-          echo "Unsupported branch: $CI_COMMIT_BRANCH" >&2
-          exit 1
-          ;;
-      esac
+      echo "Updating Coolify image tag..."
+      echo "URL      : ${DEPLOY_COOLIFY_URL}/api/v1/applications/${DEPLOY_COOLIFY_APPLICATION_ID}"
+      echo "VERSION_TAG: $VERSION_TAG"
 
-      BASE_URL="$(printf '%s' "$BASE_URL" | tr -d '\r\n')"
-      BASE_URL="${BASE_URL%/}"
-      APP_ID="$(printf '%s' "$APP_ID" | tr -d '\r\n')"
-      API_TOKEN="$(printf '%s' "$API_TOKEN" | tr -d '\r\n')"
-      DEPLOY_WEBHOOK="$(printf '%s' "$DEPLOY_WEBHOOK" | tr -d '\r\n')"
-
-      echo "Updating Coolify image tag: $IMAGE_TAG"
-      curl --fail-with-body --silent --show-error \
+      RESPONSE=$(curl -sS \
+        --fail-with-body \
         --request PATCH \
-        "${BASE_URL}/api/v1/applications/${APP_ID}" \
-        --header "Authorization: Bearer ${API_TOKEN}" \
-        --header "Content-Type: application/json" \
-        --header "Accept: application/json" \
-        --data "{\"docker_registry_image_tag\":\"${IMAGE_TAG}\"}"
+        "${DEPLOY_COOLIFY_URL}/api/v1/applications/${DEPLOY_COOLIFY_APPLICATION_ID}" \
+        -H "Authorization: Bearer ${DEPLOY_COOLIFY_TOKEN}" \
+        -H "Content-Type: application/json" \
+        --data "{
+          \"docker_registry_image_tag\": \"$VERSION_TAG\"
+        }")
 
-      echo ""
-      echo "Requesting Coolify deployment..."
-      curl --fail-with-body --silent --show-error \
-        --request GET \
-        "$DEPLOY_WEBHOOK" \
-        --header "Authorization: Bearer ${API_TOKEN}" \
-        --header "Accept: application/json"
+      echo "Coolify response:"
+      echo "$RESPONSE"
 
-      echo ""
-      echo "Coolify accepted the deployment request."
+      echo "Coolify image tag updated successfully."
+
+deploy_coolify:
+  stage: deploy
+  <<: *pipeline_rules
+  needs:
+    - update_coolify_tag
+  script:
+    - |
+      set -e
+
+      echo "Deploying to Coolify..."
+      echo "Environment : $ENVIRONMENT"
+      echo "Version     : $VERSION_TAG"
+      echo "Build       : $BUILD_TAG"
+
+      COOLIFY_DEPLOY_URL="$(printf '%s' "$DEPLOY_COOLIFY_WEBHOOK" | tr -d '\r\n')"
+
+      echo "Triggering deployment..."
+
+      RESPONSE=$(curl -sS -X "$DEPLOY_COOLIFY_METHOD" "$COOLIFY_DEPLOY_URL" \
+        -H "Authorization: Bearer $DEPLOY_COOLIFY_TOKEN")
+
+      echo "Coolify deployment response:"
+      echo "$RESPONSE"
+
+      echo "Deployment triggered successfully."
 
       echo "Sending Discord notification..."
-      DISCORD_URL="$(printf '%s' "${DISCORD_WEBHOOK:?Missing DISCORD_WEBHOOK}" | tr -d '\r\n')"
-      curl --fail-with-body --silent --show-error \
-        --request POST \
-        --header "Content-Type: application/json" \
-        --data "{\"content\":\"✅ Coolify deployment requested\\n\\nEnvironment: ${ENVIRONMENT}\\nProject: ${CI_PROJECT_NAME}\\nBranch: ${CI_COMMIT_BRANCH}\\nTag: ${IMAGE_TAG}\\nCommit: ${CI_COMMIT_SHORT_SHA}\\nPipeline: ${CI_PIPELINE_URL}\"}" \
+
+      DISCORD_URL="$(printf '%s' "$DISCORD_WEBHOOK" | tr -d '\r\n')"
+
+      curl -sS \
+        -H "Content-Type: application/json" \
+        -X POST \
+        --data "{\"content\":\"✅ Deployment completed\n\nEnvironment: ${ENVIRONMENT}\nProject: ${CI_PROJECT_NAME}\nVersion: $VERSION_TAG\nBuild: $BUILD_TAG\nCommit: ${CI_COMMIT_SHORT_SHA}\nPipeline: ${CI_PIPELINE_URL}\n\"}" \
         "$DISCORD_URL"

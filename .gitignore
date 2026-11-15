@@ -255,11 +255,13 @@ paket-files/
 **/.abpstudio/
 
 # AuthServer
-ObjectStorageService.Host/Logs/
+src/ObjectStorageService.Api/Logs/
 # Use abp install-libs to restore.
 **/wwwroot/libs/*
 
 # IdentityServer temp files
 tempkey.rsa
 tempkey.jwk
-/ObjectStorageService.Host/Logs/logs.txt
+/src/ObjectStorageService.Api/Logs/logs.txt
+
+.docker-context/

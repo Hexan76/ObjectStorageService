@@ -7,11 +7,8 @@
     <Project Path="../building-block/src/Framework.BuildingBlock.EntityFrameworkCore/Framework.BuildingBlock.EntityFrameworkCore.csproj" />
     <Project Path="../building-block/src/Framework.BuildingBlock.HttpApi/Framework.BuildingBlock.HttpApi.csproj" />
   </Folder>
-  <Project Path="ObjectStorageService.Application.Contracts/ObjectStorageService.Application.Contracts.csproj" />
-  <Project Path="ObjectStorageService.Application/ObjectStorageService.Application.csproj" />
-  <Project Path="ObjectStorageService.Domain.Shared/ObjectStorageService.Domain.Shared.csproj" />
-  <Project Path="ObjectStorageService.Domain/ObjectStorageService.Domain.csproj" />
-  <Project Path="ObjectStorageService.EntityFrameworkCore/ObjectStorageService.EntityFrameworkCore.csproj" />
-  <Project Path="ObjectStorageService.Host/ObjectStorageService.Host.csproj" />
-  <Project Path="ObjectStorageService.HttpApi/ObjectStorageService.HttpApi.csproj" />
+  <Project Path="src/ObjectStorageService.Application/ObjectStorageService.Application.csproj" />
+  <Project Path="src/ObjectStorageService.Domain/ObjectStorageService.Domain.csproj" />
+  <Project Path="src/ObjectStorageService.Infrastructure/ObjectStorageService.Infrastructure.csproj" />
+  <Project Path="src/ObjectStorageService.Api/ObjectStorageService.Api.csproj" />
 </Solution>

@@ -21,7 +21,7 @@ public class ObjectStorageServiceDbContextFactory : IDesignTimeDbContextFactory<
     private static IConfigurationRoot BuildConfiguration()
     {
         var builder = new ConfigurationBuilder()
-            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../ObjectStorageService.Host/"))
+            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../ObjectStorageService.Api/"))
             .AddJsonFile("appsettings.json", optional: false);
 
         return builder.Build();

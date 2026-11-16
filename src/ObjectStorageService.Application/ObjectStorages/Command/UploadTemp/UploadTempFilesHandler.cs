@@ -13,11 +13,10 @@ using Volo.Abp.Caching;
 
 namespace ObjectStorageService.ObjectStorages;
 
-public class UploadTempFilesHandler(
-    IOptions<ObjectStorageOptions> options,
-    IDistributedCache<ObjectTempCache> distributedCache,
-    IMinioProcessingHelper minioClient,
-    IStringLocalizer<ObjectStorageServiceResource> L)
+public class UploadTempFilesHandler(IOptions<ObjectStorageOptions> options,
+                                    IDistributedCache<ObjectTempCache> distributedCache,
+                                    IMinioProcessingHelper minioClient,
+                                    IStringLocalizer<ObjectStorageServiceResource> L)
     : IUploadTempFilesRequestHandler
 {
     private string _destinationBucket = options.Value.BucketDestination;

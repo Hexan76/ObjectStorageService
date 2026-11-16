@@ -1,13 +1,13 @@
 ﻿using Framework.BuildingBlock.Application.Contracts;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
 using ObjectStorageService.Domain;
 using Volo.Abp.Caching;
 
 namespace ObjectStorageService.ObjectStorages;
 
-public sealed class GetTempFilesHandler(
-    IDistributedCache<ObjectTempCache> distributedCache,
-    Microsoft.Extensions.Options.IOptions<ObjectStorageOptions> options)
+public sealed class GetTempFilesHandler(IDistributedCache<ObjectTempCache> distributedCache,
+                                        IOptions<ObjectStorageOptions> options)
     : IGetTempFilesRequestHandler
 {
     private readonly string _environment = options.Value.Environment;
